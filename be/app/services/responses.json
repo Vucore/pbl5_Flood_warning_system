@@ -1,0 +1,76 @@
+{
+  "en": {
+    "greetings": [
+      "Hello! I'm your flood warning assistant. How can I help you today?",
+      "Hi there! I can provide information about flood risks and sensor data. What would you like to know?",
+      "Welcome! I'm here to help with flood monitoring and early warnings. What information do you need?"
+    ],
+    "farewell": [
+      "Goodbye! Stay safe!",
+      "Take care and stay alert to flood warnings!",
+      "Bye for now. Don't hesitate to return if you need more information."
+    ],
+    "thanks": [
+      "You're welcome! Is there anything else I can help with?",
+      "Happy to help! Let me know if you need any other information.",
+      "Glad I could assist. Feel free to ask more questions anytime."
+    ],
+    "unknown": [
+      "I'm not sure I understand. You can ask me about current flood risks, sensor readings, or what actions to take.",
+      "Sorry, I didn't catch that. Try asking about flood warnings, sensor data, or safety recommendations.",
+      "I don't have information about that. Can I help you with flood risks, weather data, or emergency procedures instead?"
+    ],
+    "flood_info": [
+      "Flooding occurs when water overflows onto normally dry land. It can be caused by heavy rainfall, rising river levels, dam failures, or coastal surges. Our system monitors key indicators like rainfall, water levels, and soil saturation to provide early warnings.",
+      "Floods are one of the most common natural disasters. They can develop slowly or happen suddenly without warning. Our early warning system analyzes real-time data to detect flood risks before they become emergencies.",
+      "Flood monitoring systems track several environmental factors including rainfall intensity, water levels, soil moisture, and weather forecasts to predict potential flooding events."
+    ],
+    "warning_levels": [
+      "Our warning system has four levels:\n• Normal: No significant flood risk\n• Watch: Potential for flooding, stay alert\n• Warning: High probability of flooding, prepare to take action\n• Severe: Imminent or ongoing flooding, immediate action required",
+      "We use a four-tier alert system:\n• Normal (Green): Safe conditions\n• Watch (Yellow): Be aware of possible flooding\n• Warning (Orange): Prepare for likely flooding\n• Severe (Red): Take immediate action, flooding is occurring or imminent",
+      "The four warning levels in our system are Normal, Watch, Warning, and Severe. Each represents an increasing level of flood risk and requires different preparedness actions."
+    ],
+    "safety_tips": [
+      "During flood warnings:\n1. Move to higher ground\n2. Avoid walking or driving through floodwaters\n3. Prepare an emergency kit\n4. Follow evacuation orders\n5. Stay informed through official channels",
+      "To stay safe during floods:\n• Create an emergency plan with your family\n• Keep important documents in waterproof containers\n• Know your evacuation routes\n• Have emergency supplies ready\n• Never drive through flooded areas - turn around, don't drown",
+      "Flood safety essentials:\n• Sign up for emergency alerts\n• Protect your property with sandbags if needed\n• Keep electrical devices away from water\n• Evacuate immediately if told to do so\n• Check on vulnerable neighbors if safe to do so"
+    ]
+  },
+  "vi": {
+    "greetings": [
+      "Xin chào! Tôi là trợ lý cảnh báo lũ lụt. Tôi có thể giúp gì cho bạn hôm nay?",
+      "Chào bạn! Tôi có thể cung cấp thông tin về nguy cơ lũ lụt và dữ liệu cảm biến. Bạn muốn biết gì?",
+      "Xin chào! Tôi ở đây để giúp bạn theo dõi lũ lụt và cảnh báo sớm. Bạn cần thông tin gì?"
+    ],
+    "farewell": [
+      "Tạm biệt! Hãy giữ an toàn!",
+      "Hãy cẩn thận và chú ý đến các cảnh báo lũ lụt!",
+      "Tạm biệt. Đừng ngần ngại quay lại nếu bạn cần thêm thông tin."
+    ],
+    "thanks": [
+      "Không có gì! Có điều gì khác tôi có thể giúp không?",
+      "Rất vui được giúp đỡ! Hãy cho tôi biết nếu bạn cần thông tin khác.",
+      "Rất vui vì đã có thể hỗ trợ. Hãy tự nhiên đặt thêm câu hỏi bất cứ lúc nào."
+    ],
+    "unknown": [
+      "Tôi không chắc tôi hiểu. Bạn có thể hỏi tôi về nguy cơ lũ lụt hiện tại, chỉ số cảm biến, hoặc những hành động cần thực hiện.",
+      "Xin lỗi, tôi không hiểu điều đó. Hãy thử hỏi về cảnh báo lũ lụt, dữ liệu cảm biến, hoặc khuyến nghị an toàn.",
+      "Tôi không có thông tin về điều đó. Tôi có thể giúp bạn với thông tin về nguy cơ lũ lụt, dữ liệu thời tiết, hoặc quy trình khẩn cấp không?"
+    ],
+    "flood_info": [
+      "Lũ lụt xảy ra khi nước tràn vào đất liền thường khô. Nó có thể do mưa lớn, mực nước sông dâng cao, vỡ đập, hoặc các đợt nước dâng ven biển. Hệ thống của chúng tôi giám sát các chỉ số quan trọng như lượng mưa, mực nước và độ bão hòa của đất để đưa ra cảnh báo sớm.",
+      "Lũ lụt là một trong những thiên tai phổ biến nhất. Chúng có thể phát triển chậm hoặc xảy ra đột ngột mà không có cảnh báo. Hệ thống cảnh báo sớm của chúng tôi phân tích dữ liệu thời gian thực để phát hiện nguy cơ lũ lụt trước khi chúng trở thành tình trạng khẩn cấp.",
+      "Hệ thống giám sát lũ lụt theo dõi một số yếu tố môi trường bao gồm cường độ mưa, mực nước, độ ẩm đất và dự báo thời tiết để dự đoán các sự kiện lũ lụt tiềm ẩn."
+    ],
+    "warning_levels": [
+      "Hệ thống cảnh báo của chúng tôi có bốn cấp độ:\n• Bình thường: Không có nguy cơ lũ lụt đáng kể\n• Theo dõi: Có khả năng xảy ra lũ lụt, hãy cảnh giác\n• Cảnh báo: Xác suất cao xảy ra lũ lụt, chuẩn bị hành động\n• Nghiêm trọng: Lũ lụt sắp xảy ra hoặc đang diễn ra, cần hành động ngay lập tức",
+      "Chúng tôi sử dụng hệ thống cảnh báo bốn cấp:\n• Bình thường (Xanh lá): Điều kiện an toàn\n• Theo dõi (Vàng): Cảnh giác với khả năng lũ lụt\n• Cảnh báo (Cam): Chuẩn bị cho lũ lụt có khả năng xảy ra\n• Nghiêm trọng (Đỏ): Hành động ngay lập tức, lũ lụt đang xảy ra hoặc sắp xảy ra",
+      "Bốn cấp cảnh báo trong hệ thống của chúng tôi là Bình thường, Theo dõi, Cảnh báo và Nghiêm trọng. Mỗi cấp đại diện cho mức độ rủi ro lũ lụt tăng dần và đòi hỏi các hành động chuẩn bị khác nhau."
+    ],
+    "safety_tips": [
+      "Trong thời gian cảnh báo lũ lụt:\n1. Di chuyển đến vùng đất cao\n2. Tránh đi bộ hoặc lái xe qua vùng nước lũ\n3. Chuẩn bị bộ dụng cụ khẩn cấp\n4. Tuân theo lệnh sơ tán\n5. Cập nhật thông tin qua các kênh chính thức",
+      "Để đảm bảo an toàn trong lũ lụt:\n• Lập kế hoạch khẩn cấp với gia đình\n• Giữ các tài liệu quan trọng trong hộp chống nước\n• Biết rõ đường sơ tán\n• Chuẩn bị sẵn vật dụng khẩn cấp\n• Không bao giờ lái xe qua vùng ngập lụt - hãy quay lại, đừng liều mạng",
+      "Những điều cần thiết về an toàn khi lũ lụt:\n• Đăng ký nhận cảnh báo khẩn cấp\n• Bảo vệ tài sản bằng bao cát nếu cần\n• Giữ các thiết bị điện tránh xa nước\n• Sơ tán ngay lập tức nếu được yêu cầu\n• Kiểm tra hàng xóm dễ bị tổn thương nếu an toàn"
+    ]
+  }
+}
