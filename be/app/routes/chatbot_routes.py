@@ -2,10 +2,10 @@ from typing import Optional
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-from app.services import chatbot_service
 import logging
-from app.services import handl_data_global
 import json
+from services import chatbot_service
+from services import handl_data_global
 
 router = APIRouter()
 

@@ -1,4 +1,4 @@
-from app.database.SensorData import SensorData
+from database.SensorData import SensorData
 from datetime import datetime
 from fastapi.responses import JSONResponse
 

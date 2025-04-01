@@ -6,8 +6,9 @@ from typing import Dict, Any, Optional, List, Tuple
 from datetime import datetime
 
 # Load responses from the JSON file
+json_path = "services/responses.json"
 try:
-    with open('responses.json', 'r', encoding='utf-8') as f:
+    with open(json_path, 'r', encoding='utf-8') as f:
         RESPONSES = json.load(f)
         print(f"Loading responses.json Success!")
 except (FileNotFoundError, json.JSONDecodeError) as e:

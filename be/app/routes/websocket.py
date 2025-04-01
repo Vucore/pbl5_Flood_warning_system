@@ -1,9 +1,9 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 # from app.services import sensor_service
 import asyncio
-from app.services import data_processing
-from app.database.SensorData import SensorData
-from app.services import handl_data_global
+from services import data_processing
+from database.SensorData import SensorData
+from services import handl_data_global
 router = APIRouter()
 
 class ConnectionManager:
