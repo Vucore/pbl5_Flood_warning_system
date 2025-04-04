@@ -160,21 +160,22 @@ def process_message(message: str, language: str, latest_data: Optional[Any], war
         
         if language == "en":
             return (f"Current sensor readings:\n"
-                   f"• Temperature: {latest_data['temperature']}°C\n"
-                   f"• Air Pressure: {latest_data['air_pressure']} hPa\n"
-                   f"• Air Humidity: {latest_data['air_humidity']}%\n"
+                    f"• Hiện tại: {latest_data['timestamp']}\n"
+                   f"• Temperature: {latest_data['temperature']:.2f}°C\n"
+                   f"• Air Pressure: {latest_data['air_pressure']:.2f} hPa\n"
+                   f"• Air Humidity: {latest_data['air_humidity']:.2f}%\n"
                    f"• Rainfall: {latest_data['rainfall']}\n"
                    f"• Soil Humidity: {latest_data['soil_humidity']}\n"
-                   f"• Water Level: {latest_data['water_level']} cm")
+                   f"• Water Level: {latest_data['water_level']:.2f} cm")
         else:
             return (f"Chỉ số cảm biến hiện tại:\n"
                     f"• Hiện tại: {latest_data['timestamp']}\n"
-                   f"• Nhiệt độ: {latest_data['temperature']}°C\n"
-                   f"• Áp suất không khí: {latest_data['air_pressure']} hPa\n"
-                   f"• Độ ẩm không khí: {latest_data['air_humidity']}%\n"
+                   f"• Nhiệt độ: {latest_data['temperature']:.2f}°C\n"
+                   f"• Áp suất không khí: {latest_data['air_pressure']:.2f} hPa\n"
+                   f"• Độ ẩm không khí: {latest_data['air_humidity']:.2f}%\n"
                    f"• Lượng mưa: {latest_data['rainfall']}\n"
                    f"• Độ ẩm đất: {latest_data['soil_humidity']}\n"
-                   f"• Mực nước: {latest_data['water_level']} cm")
+                   f"• Mực nước: {latest_data['water_level']:.2f} cm")
     
     # elif intent == "prediction":
     #     # Get prediction from ML model based on latest data

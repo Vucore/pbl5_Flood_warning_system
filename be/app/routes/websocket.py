@@ -1,7 +1,7 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 # from app.services import sensor_service
 import asyncio
-from services import data_processing
+from services import data_processing, sensor_services
 from database.SensorData import SensorData
 from services import handl_data_global
 router = APIRouter()
@@ -57,29 +57,29 @@ async def websocket_endpoint(websocket: WebSocket):
                     
                 print(f"Received: {message}")
                 
-                parts = message.split(";")
-                temperature = float(parts[0].strip())
-                air_pressure = float(parts[1].strip())
-                air_humidity = float(parts[2].strip())
-                rainfall = float(parts[3].strip())
-                soil_humidity = float(parts[4].strip())
-                water_level = float(parts[5].strip())
+                # parts = message.split(";")
+                # temperature = float(parts[0].strip())
+                # air_pressure = float(parts[1].strip())
+                # air_humidity = float(parts[2].strip())
+                # rainfall = float(parts[3].strip())
+                # soil_humidity = float(parts[4].strip())
+                # water_level = float(parts[5].strip())
 
 
-                sensor_data = SensorData(timestamp=None, rainfall = rainfall, soil_humidity = soil_humidity, air_humidity = air_humidity, air_pressure= air_pressure, temperature = temperature, water_level = water_level)
+                # sensor_data = SensorData(timestamp=None, rainfall = rainfall, soil_humidity = soil_humidity, air_humidity = air_humidity, air_pressure= air_pressure, temperature = temperature, water_level = water_level)
+                sensor_data = data_processing.convert_message_to_sensor_data(message=message)
+                sensor_data_standardize = data_processing.clean_and_validate_data(sensor_data)
 
-                sensor_data_process = data_processing.clean_and_validate_data(sensor_data)
-
-                if(sensor_data_process):
+                if(sensor_data_standardize):
                     # Lưu vào database
-                    # sensor_service.process_sensor_data(sensor_data=sensor_data)
+                    # sensor_services.save_sensor_data_to_db(sensor_data=sensor_data)
                     # Luu vao bien global
-                    handl_data_global.save_global_data(sensor_data_process)
+                    handl_data_global.save_global_data(sensor_data_standardize)
                     # print(handl_data_global.get_current_data().body.decode("utf-8"))
                 else:
                     print("dữ liệu bị lỗi nên bỏ qua")
                 # Gửi dữ liệu cho tất cả clients
-                await manager.broadcast(sensor_data_process)
+                await manager.broadcast(sensor_data_standardize)
                 
             except (ValueError, IndexError) as e:
                 print(f"Invalid data format: {e}")

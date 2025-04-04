@@ -83,3 +83,21 @@ def convert_to_json(data: SensorData):
         print("⚠ Lỗi: data bị None!")
         return None
 
+def convert_message_to_sensor_data(message: str):
+    parts = message.split(";")
+    temperature = float(parts[0].strip())
+    air_pressure = float(parts[1].strip())
+    air_humidity = float(parts[2].strip())
+    rainfall = float(parts[3].strip())
+    soil_humidity = float(parts[4].strip())
+    water_level = float(parts[5].strip())
+
+
+    sensor_data = SensorData(timestamp=None,
+                            rainfall = rainfall,
+                            soil_humidity = soil_humidity, 
+                            air_humidity = air_humidity, 
+                            air_pressure= air_pressure, 
+                            temperature = temperature, 
+                            water_level = water_level)
+    return sensor_data

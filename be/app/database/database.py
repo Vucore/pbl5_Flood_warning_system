@@ -10,12 +10,12 @@ write_api = client.write_api(write_options=WriteOptions(batch_size=1))
 def save_sensor_data(sensor: SensorData):
     point = (
         Point("sensor_data")
-        .field("rainfall", sensor.rainfall)
-        .field("water_level", sensor.water_level)
-        .field("soil_humidity", sensor.soil_humidity)
-        .field("air_humidity", sensor.air_humidity)
-        .field("air_pressure", sensor.air_pressure)
-        .field("temperature", sensor.temperature)
+        .field("rainfall", (float)(sensor.rainfall))
+        .field("water_level", (float)(sensor.water_level))
+        .field("soil_humidity", (float)(sensor.soil_humidity))
+        .field("air_humidity", (float)(sensor.air_humidity))
+        .field("air_pressure", (float)(sensor.air_pressure))
+        .field("temperature", (float)(sensor.temperature))
     )
     write_api.write(bucket=config.INFLUXDB_BUCKET, org=config.INFLUXDB_ORG, record=point)
     return {"message": "Data saved successfully"}

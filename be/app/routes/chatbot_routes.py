@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 import logging
 import json
-from services import chatbot_service
+from services import chatbot_services
 from services import handl_data_global
 
 router = APIRouter()
@@ -28,7 +28,7 @@ async def chat_endpoint(request: ChatRequest):
 
         latest_data = json.loads(handl_data_global.get_current_data().body.decode("utf-8"))
         
-        response = chatbot_service.process_message(
+        response = chatbot_services.process_message(
             user_message,
             language,
             latest_data,
