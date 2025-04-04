@@ -1,11 +1,11 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flood Monitoring System</title>
     <!-- <script src="https://kit.fontawesome.com/a076d05399.js" cross>origin="anonymous"</script> -->
-    <link rel="stylesheet" href="../css/style_base.css">
+    <link rel="stylesheet" href="../css/style_base1.css">
     <link rel="stylesheet" href="../css/style_chatbot.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,0,0" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -22,7 +22,7 @@
     </header>
     <div class="warning" id="warning">
         ⚠️ <strong>Warning:</strong> High rainfall detected. Potential flooding risk in the next 24 hours.
-        <button id="hide-Warning">Dismiss</button>
+        <button id="hide-Warning" onclick="hideWarning()">Dismiss</button>
     </div>
 
     <main>
@@ -36,7 +36,8 @@
                         <div class="value">
                             <span id="temperature">28.5°C</span>
                         </div>
-                        <p id="change" class="change up">⬆ +1.2°C since yesterday</p>
+                        <small id="tempChange" class="change-text"></small>
+                        <!-- Dòng thông tin thay đổi nằm dưới -->
                     </div>
                     <i class="fas fa-thermometer-half"></i>
                 </div>
@@ -46,7 +47,8 @@
                         <div class="value">
                             <span id="airPressure">1012.5 hPa</span>
                         </div>
-                        <p id="change" class="change down">⬇ -3.8 hPa since yesterday</p>
+                        <small id="pressureChange" class="change-text"></small>
+                        <!-- Dòng thông tin thay đổi -->
                     </div>
                     <i class="fas fa-wind"></i>
                 </div>
@@ -56,7 +58,7 @@
                         <div class="value">
                             <span id="airHumidity">80%</span>
                         </div>
-                        <p id="change" class="change up">⬆ +5% in the last 24 hours</p>
+                        <small id="humidityChange" class="change-text"></small>
                     </div>
                     <i class="fas fa-water"></i>
                 </div>
@@ -76,7 +78,7 @@
                         <div class="value">
                             <span id="soilHumidity">87.5%</span>
                         </div>
-                        <p id="change" class="change up">⬆ +8.5% since yesterday</p>
+                        <small id="soilHumidityChange" class="change-text"></small>
                     </div>
                     <i class="fas fa-seedling"></i>
                 </div>
@@ -86,13 +88,15 @@
                         <div class="value">
                             <span id="waterLevel">10 cm</span>
                         </div>
-                        <p id="change" class="change up">⬆ +5 cm in the last 24 hours</p>
+                        <small id="waterLevelChange" class="change-text"></small>
                     </div>
                     <i class="fas fa-water"></i>
                 </div>
             </div>
         </section>
+        
 
+    
 
         <!-- chart -->
         <section class="chart-readings">
@@ -104,6 +108,34 @@
                 </div>
                 <div class="card-recom">
 
+                </div>
+            </div>
+        </section>
+
+        <!-- Thêm section mới vào trước thẻ đóng </main> -->
+        <section class="risk-prediction">
+            <div class="risk-header">
+                <i class="fas fa-chart-line"></i>
+                <span>Flood Risk Prediction</span>
+            </div>
+            <div class="risk-content">
+                <div class="risk-level">
+                    <div class="risk-label">HIGH RISK</div>
+                    <div class="risk-progress">
+                        <div class="progress-bar" style="width: 75%;">
+                            <span>75%</span>
+                        </div>
+                    </div>
+                    <div class="analysis-text">Flood Prediction Analysis:</div>
+                </div>
+                <div class="risk-analysis">
+                    <div class="recommended-actions">
+                        <h4>▲ Recommended Actions</h4>
+                        <ul>
+                            <li><i class="fas fa-arrow-up"></i> Move valuables to higher floors</li>
+                            <li><i class="fas fa-first-aid"></i> Prepare emergency kit</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </section>
@@ -152,16 +184,9 @@
             </form>
         </div>
     </div>
-    <script src="../js/script_sensor_data.js"></script>
+    <script src="../js/script_sensor_data1.js"></script>
     <script src="../js/script_chatbot.js"></script>
     <script src="../js/script_func.js"></script>
 
 </body>
-</html> -->
-
-
-
-
-
-
-
+</html>

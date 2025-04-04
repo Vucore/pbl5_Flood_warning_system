@@ -21,14 +21,14 @@ function connectWebSocket() {
     });
 
     socket.addEventListener('message', function(event) {
-        console.log("Received data:", event.data);
+        // console.log("Received data:", event.data);
         if (event.data === "ping") {
             console.log("⚡ Nhận ping từ server, bỏ qua...");
             return;
         }
         try {
+            
             const data = JSON.parse(event.data); // Chuyển đổi JSON thành object
-    
             currentTemp.textContent = data.temperature.toFixed(2);
             currentAirPres.textContent = data.air_pressure.toFixed(2);
             currentAirHum.textContent = data.air_humidity.toFixed(2);
