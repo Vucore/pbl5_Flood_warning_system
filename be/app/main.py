@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 # from app.routes.chatbot_routes import router as chatbot_router  # Đảm bảo import router
-from routes import websocket, chatbot_routes
+from .routes import websocket, chatbot_routes
 # from app.routes import websocket, chatbot_routes
 # from app.routes.chatbot_routes import router as chatbot_routes
 from fastapi.middleware.cors import CORSMiddleware

@@ -4,178 +4,187 @@ import random
 import numpy as np
 from typing import Dict, Any, Optional, List, Tuple
 from datetime import datetime
+from ..ai.ChatBot.init_chatbot import ChatbotBase
+
+
+chatbot = ChatbotBase()
 
 # Load responses from the JSON file
-json_path = "services/responses.json"
-try:
-    with open(json_path, 'r', encoding='utf-8') as f:
-        RESPONSES = json.load(f)
-        print(f"Loading responses.json Success!")
-except (FileNotFoundError, json.JSONDecodeError) as e:
-    print(f"Error loading responses.json: {e}")
-    # Fallback minimal responses
-    RESPONSES = {
-        "en": {
-            "greetings": ["Hello! How can I help you?"],
-            "farewell": ["Goodbye!"],
-            "thanks": ["You're welcome!"],
-            "unknown": ["I don't understand that question."],
-            "flood_info": ["Flooding occurs when water overflows onto land."],
-            "warning_levels": ["We have four warning levels."],
-            "safety_tips": ["Stay safe during floods."]
-        },
-        "vi": {
-            "greetings": ["Xin chào! Tôi có thể giúp gì cho bạn?"],
-            "farewell": ["Tạm biệt!"],
-            "thanks": ["Không có gì!"],
-            "unknown": ["Tôi không hiểu câu hỏi đó."],
-            "flood_info": ["Lũ lụt xảy ra khi nước tràn vào đất liền."],
-            "warning_levels": ["Chúng tôi có bốn cấp cảnh báo."],
-            "safety_tips": ["Hãy đảm bảo an toàn trong lũ lụt."]
-        }
-    }
+# json_path = "services/responses.json"
+# try:
+#     with open(json_path, 'r', encoding='utf-8') as f:
+#         RESPONSES = json.load(f)
+#         print(f"Loading responses.json Success!")
+# except (FileNotFoundError, json.JSONDecodeError) as e:
+#     print(f"Error loading responses.json: {e}")
+#     # Fallback minimal responses
+#     RESPONSES = {
+#         "en": {
+#             "greetings": ["Hello! How can I help you?"],
+#             "farewell": ["Goodbye!"],
+#             "thanks": ["You're welcome!"],
+#             "unknown": ["I don't understand that question."],
+#             "flood_info": ["Flooding occurs when water overflows onto land."],
+#             "warning_levels": ["We have four warning levels."],
+#             "safety_tips": ["Stay safe during floods."]
+#         },
+#         "vi": {
+#             "greetings": ["Xin chào! Tôi có thể giúp gì cho bạn?"],
+#             "farewell": ["Tạm biệt!"],
+#             "thanks": ["Không có gì!"],
+#             "unknown": ["Tôi không hiểu câu hỏi đó."],
+#             "flood_info": ["Lũ lụt xảy ra khi nước tràn vào đất liền."],
+#             "warning_levels": ["Chúng tôi có bốn cấp cảnh báo."],
+#             "safety_tips": ["Hãy đảm bảo an toàn trong lũ lụt."]
+#         }
+#     }
 
-# Keywords for intent recognition
-KEYWORDS = {
-    "greeting": ["hello", "hi", "hey", "greetings", "xin chào", "chào", "good morning", "good afternoon"],
-    "farewell": ["bye", "goodbye", "see you", "tạm biệt", "hẹn gặp lại"],
-    "thanks": ["thank", "thanks", "appreciate", "cảm ơn", "cám ơn", "biết ơn"],
-    "risk_level": ["risk", "danger", "warning", "level", "status", "nguy hiểm", "cảnh báo", "nguy cơ", "trạng thái", "tình trạng"],
-    "prediction": ["predict", "forecast", "future", "tomorrow", "later", "dự báo", "dự đoán", "tương lai", "ngày mai", "sau này", "will it flood", "có lũ không"],
-    "sensor_data": ["temperature", "pressure", "humidity", "rainfall", "water", "soil", "nhiệt độ", "áp suất", "độ ẩm", "lượng mưa", "nước", "đất", "reading", "sensor", "cảm biến", "số liệu"],
-    "current_situation": ["current", "now", "happening", "current situation", "tình hình hiện tại", "hiện tại", "bây giờ", "đang xảy ra", "situation now", "what's happening", "show me data", "hiển thị dữ liệu", "tell me about current", "how is it now"],
-    "flood_info": ["what is flood", "about flood", "flood information", "lũ lụt là gì", "về lũ lụt", "thông tin lũ lụt", "explain flood", "cause", "nguyên nhân"],
-    "warning_levels": ["warning level", "alert level", "warning system", "cấp độ cảnh báo", "hệ thống cảnh báo", "mức độ cảnh báo", "alert system"],
-    "safety_tips": ["safe", "safety", "protect", "prepare", "action", "an toàn", "bảo vệ", "chuẩn bị", "hành động", "what to do", "làm gì", "emergency", "khẩn cấp"]
-}
+# # Keywords for intent recognition
+# KEYWORDS = {
+#     "greeting": ["hello", "hi", "hey", "greetings", "xin chào", "chào", "good morning", "good afternoon"],
+#     "farewell": ["bye", "goodbye", "see you", "tạm biệt", "hẹn gặp lại"],
+#     "thanks": ["thank", "thanks", "appreciate", "cảm ơn", "cám ơn", "biết ơn"],
+#     "risk_level": ["risk", "danger", "warning", "level", "status", "nguy hiểm", "cảnh báo", "nguy cơ", "trạng thái", "tình trạng"],
+#     "prediction": ["predict", "forecast", "future", "tomorrow", "later", "dự báo", "dự đoán", "tương lai", "ngày mai", "sau này", "will it flood", "có lũ không"],
+#     "sensor_data": ["temperature", "pressure", "humidity", "rainfall", "water", "soil", "nhiệt độ", "áp suất", "độ ẩm", "lượng mưa", "nước", "đất", "reading", "sensor", "cảm biến", "số liệu"],
+#     "current_situation": ["current", "now", "happening", "current situation", "tình hình hiện tại", "hiện tại", "bây giờ", "đang xảy ra", "situation now", "what's happening", "show me data", "hiển thị dữ liệu", "tell me about current", "how is it now"],
+#     "flood_info": ["what is flood", "about flood", "flood information", "lũ lụt là gì", "về lũ lụt", "thông tin lũ lụt", "explain flood", "cause", "nguyên nhân"],
+#     "warning_levels": ["warning level", "alert level", "warning system", "cấp độ cảnh báo", "hệ thống cảnh báo", "mức độ cảnh báo", "alert system"],
+#     "safety_tips": ["safe", "safety", "protect", "prepare", "action", "an toàn", "bảo vệ", "chuẩn bị", "hành động", "what to do", "làm gì", "emergency", "khẩn cấp"]
+# }
 
-def extract_intent(message: str) -> str:
-    """
-    Extract the primary intent from a user message using keyword matching.
-    Now with improved language understanding.
+# def extract_intent(message: str) -> str:
+#     """
+#     Extract the primary intent from a user message using keyword matching.
+#     Now with improved language understanding.
     
-    Args:
-        message: The user's message
+#     Args:
+#         message: The user's message
         
-    Returns:
-        The identified intent
-    """
-    message = message.lower()
+#     Returns:
+#         The identified intent
+#     """
+#     message = message.lower()
     
-    # Score each intent based on keyword matches
-    intent_scores = {}
-    for intent, keywords in KEYWORDS.items():
-        score = 0
-        for keyword in keywords:
-            if keyword in message:
-                # Exact matches get higher scores
-                if f" {keyword} " in f" {message} ":
-                    score += 2
-                else:
-                    score += 1
-        intent_scores[intent] = score
+#     # Score each intent based on keyword matches
+#     intent_scores = {}
+#     for intent, keywords in KEYWORDS.items():
+#         score = 0
+#         for keyword in keywords:
+#             if keyword in message:
+#                 # Exact matches get higher scores
+#                 if f" {keyword} " in f" {message} ":
+#                     score += 2
+#                 else:
+#                     score += 1
+#         intent_scores[intent] = score
     
-    # Check for prediction requests specifically
-    # prediction_patterns = [
-    #     r"(will|is).*(flood|flooding).*\?",
-    #     r"(có|sẽ).*ngập.*\?",
-    #     r"(có|sẽ).*lũ.*\?",
-    #     r"(predict|forecast|dự báo|dự đoán).*([0-9]+.*hour|day|giờ|ngày)"
-    # ]
+#     # Check for prediction requests specifically
+#     # prediction_patterns = [
+#     #     r"(will|is).*(flood|flooding).*\?",
+#     #     r"(có|sẽ).*ngập.*\?",
+#     #     r"(có|sẽ).*lũ.*\?",
+#     #     r"(predict|forecast|dự báo|dự đoán).*([0-9]+.*hour|day|giờ|ngày)"
+#     # ]
     
-    # for pattern in prediction_patterns:
-    #     if re.search(pattern, message):
-    #         intent_scores["prediction"] += 3
+#     # for pattern in prediction_patterns:
+#     #     if re.search(pattern, message):
+#     #         intent_scores["prediction"] += 3
     
-    # Find the intent with the highest score
-    max_score = 0
-    best_intent = "unknown"
+#     # Find the intent with the highest score
+#     max_score = 0
+#     best_intent = "unknown"
     
-    for intent, score in intent_scores.items():
-        if score > max_score:
-            max_score = score
-            best_intent = intent
+#     for intent, score in intent_scores.items():
+#         if score > max_score:
+#             max_score = score
+#             best_intent = intent
     
-    # If we have a very low confidence, return unknown
-    if max_score < 1:
-        return "unknown"
+#     # If we have a very low confidence, return unknown
+#     if max_score < 1:
+#         return "unknown"
     
-    return best_intent
+#     return best_intent
+
+def process_bot_response(message: str):
+    response = chatbot.generate_response(message)
+    # return {"response": response}
+    return response
 
 
-def process_message(message: str, language: str, latest_data: Optional[Any], warning_level: str) -> str:
-    """
-    Process a user message and generate a response.
+# def process_message(message: str, language: str, latest_data: Optional[Any], warning_level: str) -> str:
+#     """
+#     Process a user message and generate a response.
     
-    Args:
-        message: The user's message
-        language: The current language (en or vi)
-        latest_data: The latest sensor data (if available)
-        warning_level: The current warning level
-        translations: Dictionary of translations
+#     Args:
+#         message: The user's message
+#         language: The current language (en or vi)
+#         latest_data: The latest sensor data (if available)
+#         warning_level: The current warning level
+#         translations: Dictionary of translations
         
-    Returns:
-        The chatbot's response
-    """
-    intent = extract_intent(message)
+#     Returns:
+#         The chatbot's response
+#     """
+#     intent = extract_intent(message)
     
-    # Get translations for the current language
-    # trans = translations.get(language, translations["en"])
-    lang = language
+#     # Get translations for the current language
+#     # trans = translations.get(language, translations["en"])
+#     lang = language
     
-    # Handle each intent
-    if intent == "greeting":
-        return random.choice(RESPONSES[lang]["greetings"])
+#     # Handle each intent
+#     if intent == "greeting":
+#         return random.choice(RESPONSES[lang]["greetings"])
     
-    elif intent == "farewell":
-        return random.choice(RESPONSES[lang]["farewell"])
+#     elif intent == "farewell":
+#         return random.choice(RESPONSES[lang]["farewell"])
     
-    elif intent == "thanks":
-        return random.choice(RESPONSES[lang]["thanks"])
+#     elif intent == "thanks":
+#         return random.choice(RESPONSES[lang]["thanks"])
     
-    elif intent == "risk_level":
-        if latest_data is None:
-            if language == "en":
-                return "I don't have any current sensor data to assess risk levels."
-            else:
-                return "Tôi không có dữ liệu cảm biến hiện tại để đánh giá mức độ rủi ro."
+#     elif intent == "risk_level":
+#         if latest_data is None:
+#             if language == "en":
+#                 return "I don't have any current sensor data to assess risk levels."
+#             else:
+#                 return "Tôi không có dữ liệu cảm biến hiện tại để đánh giá mức độ rủi ro."
         
-        # level_name = trans[warning_level]
-        # level_message = trans[f"{warning_level}_message"]
+#         # level_name = trans[warning_level]
+#         # level_message = trans[f"{warning_level}_message"]
 
-        level_name = warning_level
-        level_message = "Một số thông số cho thấy nguy cơ tiềm ẩn. Theo dõi tình hình."
+#         level_name = warning_level
+#         level_message = "Một số thông số cho thấy nguy cơ tiềm ẩn. Theo dõi tình hình."
         
-        if language == "en":
-            return f"The current flood risk level is: {level_name}. {level_message}"
-        else:
-            return f"Mức độ rủi ro lũ lụt hiện tại là: {level_name}. {level_message}"
+#         if language == "en":
+#             return f"The current flood risk level is: {level_name}. {level_message}"
+#         else:
+#             return f"Mức độ rủi ro lũ lụt hiện tại là: {level_name}. {level_message}"
     
-    elif intent == "sensor_data":      
-        if latest_data is None:
-            if language == "en":
-                return "I don't have any current sensor data available."
-            else:
-                return "Tôi không có dữ liệu cảm biến hiện tại."
+#     elif intent == "sensor_data":      
+#         if latest_data is None:
+#             if language == "en":
+#                 return "I don't have any current sensor data available."
+#             else:
+#                 return "Tôi không có dữ liệu cảm biến hiện tại."
         
-        if language == "en":
-            return (f"Current sensor readings:\n"
-                    f"• Hiện tại: {latest_data['timestamp']}\n"
-                   f"• Temperature: {latest_data['temperature']:.2f}°C\n"
-                   f"• Air Pressure: {latest_data['air_pressure']:.2f} hPa\n"
-                   f"• Air Humidity: {latest_data['air_humidity']:.2f}%\n"
-                   f"• Rainfall: {latest_data['rainfall']}\n"
-                   f"• Soil Humidity: {latest_data['soil_humidity']}\n"
-                   f"• Water Level: {latest_data['water_level']:.2f} cm")
-        else:
-            return (f"Chỉ số cảm biến hiện tại:\n"
-                    f"• Hiện tại: {latest_data['timestamp']}\n"
-                   f"• Nhiệt độ: {latest_data['temperature']:.2f}°C\n"
-                   f"• Áp suất không khí: {latest_data['air_pressure']:.2f} hPa\n"
-                   f"• Độ ẩm không khí: {latest_data['air_humidity']:.2f}%\n"
-                   f"• Lượng mưa: {latest_data['rainfall']}\n"
-                   f"• Độ ẩm đất: {latest_data['soil_humidity']}\n"
-                   f"• Mực nước: {latest_data['water_level']:.2f} cm")
+#         if language == "en":
+#             return (f"Current sensor readings:\n"
+#                     f"• Hiện tại: {latest_data['timestamp']}\n"
+#                    f"• Temperature: {latest_data['temperature']:.2f}°C\n"
+#                    f"• Air Pressure: {latest_data['air_pressure']:.2f} hPa\n"
+#                    f"• Air Humidity: {latest_data['air_humidity']:.2f}%\n"
+#                    f"• Rainfall: {latest_data['rainfall']}\n"
+#                    f"• Soil Humidity: {latest_data['soil_humidity']}\n"
+#                    f"• Water Level: {latest_data['water_level']:.2f} cm")
+#         else:
+#             return (f"Chỉ số cảm biến hiện tại:\n"
+#                     f"• Hiện tại: {latest_data['timestamp']}\n"
+#                    f"• Nhiệt độ: {latest_data['temperature']:.2f}°C\n"
+#                    f"• Áp suất không khí: {latest_data['air_pressure']:.2f} hPa\n"
+#                    f"• Độ ẩm không khí: {latest_data['air_humidity']:.2f}%\n"
+#                    f"• Lượng mưa: {latest_data['rainfall']}\n"
+#                    f"• Độ ẩm đất: {latest_data['soil_humidity']}\n"
+#                    f"• Mực nước: {latest_data['water_level']:.2f} cm")
     
     # elif intent == "prediction":
     #     # Get prediction from ML model based on latest data
@@ -267,13 +276,13 @@ def process_message(message: str, language: str, latest_data: Optional[Any], war
     #         else:
     #             return "Tôi không có đủ dữ liệu để đưa ra dự đoán lũ lụt vào lúc này."
     
-    elif intent == "current_situation":
-        # Provide a comprehensive situation report
-        if latest_data is None:
-            if language == "en":
-                return "I don't have current data to assess the situation."
-            else:
-                return "Tôi không có dữ liệu hiện tại để đánh giá tình hình."
+    # elif intent == "current_situation":
+    #     # Provide a comprehensive situation report
+    #     if latest_data is None:
+    #         if language == "en":
+    #             return "I don't have current data to assess the situation."
+    #         else:
+    #             return "Tôi không có dữ liệu hiện tại để đánh giá tình hình."
         
     #     # Get a prediction from the ML model
     #     # ml_warning_level, confidence = get_prediction_from_ml_model(latest_data)
@@ -361,19 +370,19 @@ def process_message(message: str, language: str, latest_data: Optional[Any], war
     #                f"{factor_analysis}\n\n")
     #             #    f"Độ tin cậy của mô hình dự đoán: {confidence_percent}%")
     
-    elif intent == "flood_info":
-        return random.choice(RESPONSES[lang]["flood_info"])
+    # elif intent == "flood_info":
+    #     return random.choice(RESPONSES[lang]["flood_info"])
     
-    elif intent == "warning_levels":
-        return random.choice(RESPONSES[lang]["warning_levels"])
+    # elif intent == "warning_levels":
+    #     return random.choice(RESPONSES[lang]["warning_levels"])
     
-    elif intent == "safety_tips":
-        # Customize safety tips based on current warning level
-        tips = random.choice(RESPONSES[lang]["safety_tips"])
-        if language == "en":
-            return f"Safety tips for current {warning_level} level:\n{tips}"
-        else:
-            return f"Lời khuyên an toàn cho mức {warning_level} hiện tại:\n{tips}"
+    # elif intent == "safety_tips":
+    #     # Customize safety tips based on current warning level
+    #     tips = random.choice(RESPONSES[lang]["safety_tips"])
+    #     if language == "en":
+    #         return f"Safety tips for current {warning_level} level:\n{tips}"
+    #     else:
+    #         return f"Lời khuyên an toàn cho mức {warning_level} hiện tại:\n{tips}"
     
-    else:  # unknown intent
-        return random.choice(RESPONSES[lang]["unknown"])
+    # else:  # unknown intent
+    #     return random.choice(RESPONSES[lang]["unknown"])

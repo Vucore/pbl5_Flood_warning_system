@@ -1,5 +1,5 @@
 # app/services/data_processing.py
-from database.SensorData import SensorData
+from ..database.SensorData import SensorData
 
 
 def clean_and_validate_data(data: SensorData):

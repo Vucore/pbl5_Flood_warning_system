@@ -1,9 +1,9 @@
 from fastapi import APIRouter, WebSocket, WebSocketDisconnect
 # from app.services import sensor_service
 import asyncio
-from services import data_processing, sensor_services
-from database.SensorData import SensorData
-from services import handl_data_global
+from ..services import data_processing, sensor_services
+from ..database.SensorData import SensorData
+from ..services import handl_data_global
 router = APIRouter()
 
 class ConnectionManager:
@@ -74,7 +74,7 @@ async def websocket_endpoint(websocket: WebSocket):
                     # Lưu vào database
                     # sensor_services.save_sensor_data_to_db(sensor_data=sensor_data)
                     # Luu vao bien global
-                    handl_data_global.save_global_data(sensor_data_standardize)
+                    handl_data_global.save_global_data_sensor(sensor_data_standardize)
                     # print(handl_data_global.get_current_data().body.decode("utf-8"))
                 else:
                     print("dữ liệu bị lỗi nên bỏ qua")

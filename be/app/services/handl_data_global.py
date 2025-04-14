@@ -1,4 +1,4 @@
-from database.SensorData import SensorData
+from ..database.SensorData import SensorData
 from datetime import datetime
 from fastapi.responses import JSONResponse
 
@@ -45,7 +45,7 @@ translations = {
 
 
 
-def save_global_data(data: SensorData):
+def save_global_data_sensor(data: SensorData):
     if data is None:
         return
     
@@ -72,13 +72,11 @@ def save_global_data(data: SensorData):
     if len(sensor_data_history) > MAX_HISTORY_SIZE:
             sensor_data_history.pop(0)
 
-
-def get_current_data():
+def get_current_data_sensor():
     global sensor_data_history, current_warning_level, current_language
-    
+
     if not sensor_data_history:
-        # Return default values if no data is available
-        return JSONResponse(content={
+        return {
             "timestamp": datetime.now().isoformat(),
             "rainfall": 0,
             "soil_humidity": 0,
@@ -88,11 +86,17 @@ def get_current_data():
             "water_level": 0,
             "warning_level": "No Data",
             "language": current_language
-        })
-    
+        }
+
     latest_data = sensor_data_history[-1]
-    return JSONResponse(content={
-        "timestamp": latest_data.timestamp.isoformat(),
+     # Đảm bảo timestamp là datetime object
+    if isinstance(latest_data.timestamp, str):
+        timestamp_str = latest_data.timestamp  # fallback nếu timestamp là chuỗi
+    else:
+        timestamp_str = latest_data.timestamp.isoformat()
+
+    return {
+        "timestamp": timestamp_str,
         "rainfall": latest_data.rainfall,
         "soil_humidity": latest_data.soil_humidity,
         "air_humidity": latest_data.air_humidity,
@@ -101,4 +105,4 @@ def get_current_data():
         "water_level": latest_data.water_level,
         "warning_level": current_warning_level,
         "language": current_language
-    })
+    }
