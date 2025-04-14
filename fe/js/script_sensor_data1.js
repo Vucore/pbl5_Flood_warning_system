@@ -40,12 +40,12 @@ function connectWebSocket() {
             
             
             // Cập nhật dữ liệu cảm biến
-            currentTemp.textContent = data.temperature.toFixed(2);
-            currentAirPres.textContent = data.air_pressure.toFixed(2);
-            currentAirHum.textContent = data.air_humidity.toFixed(2);
+            currentTemp.textContent = data.temperature.toFixed(2) + " °C";
+            currentAirPres.textContent = data.air_pressure.toFixed(2) + " hPa";
+            currentAirHum.textContent = data.air_humidity.toFixed(2) + " %";
             currentRainFall.textContent = data.rainfall;
             currentSoilHum.textContent = data.soil_humidity;
-            currentWaterLevel.textContent = data.water_level.toFixed(2);
+            currentWaterLevel.textContent = data.water_level.toFixed(2) + " m";
 
             // Cập nhật các thay đổi và cảnh báo
             updateChanges('tempChange', data.temperature, previousData.temperature);
@@ -68,7 +68,7 @@ function connectWebSocket() {
                 waterLevel: data.water_level
             };
             
-            console.log(previousData);
+            // console.log(previousData);
 
         } catch (error) {
             console.error("Error parsing JSON or updating values:", error);
@@ -90,7 +90,7 @@ function connectWebSocket() {
 function updateChanges(elementId, newValue, oldValue) {
     const change = newValue - oldValue;
     const changeElement = document.getElementById(elementId);
-    console.log("newValue:", newValue, "oldValue:", oldValue);
+    // console.log("newValue:", newValue, "oldValue:", oldValue);
     if (change > 0) {
         changeElement.textContent = `⬆ +${change.toFixed(2)} so với ngày hôm qua`;
         changeElement.style.color = '#28a745'; // Màu xanh cho thay đổi tích cực

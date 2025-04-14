@@ -49,11 +49,12 @@ const generateBotResponse = async (incomingMessageDiv) => {
         }
 
         const data = JSON.parse(text);
+        // console.log("data" ,data);
         // const data = await response.json();
         // Handle the response
         if (response.ok) {
             // Replace the thinking indicator with the actual response
-            const botResponse = data.response;
+            const botResponse = (String)(data.response);
             incomingMessageDiv.classList.remove("thinking");
             incomingMessageDiv.querySelector(".message-text").innerHTML = botResponse.replace(/\n/g, '<br>');
             
