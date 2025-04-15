@@ -19,13 +19,71 @@ const createMessageElement = (content, ...classes) => {
     return div;
 };
 // application/
+// const generateBotResponse = async (incomingMessageDiv) => {
+//     try {
+//         // Get the current language
+//         // const language = document.documentElement.lang || 'vi';
+//         const language = 'vi';
+        
+//         // Send the message to the server
+//         const response = await fetch('http://localhost:8000/api/chat', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify({
+//                 message: userData.message,
+//                 language: language
+//             }),
+//         });
+//         // console.log(response);
+//         // Kiểm tra phản hồi có rỗng không
+//         if (!response.ok) {
+//             throw new Error(`Server error: ${response.status} ${response.statusText}`);
+//         }
+
+//         // Kiểm tra phản hồi có nội dung trước khi gọi .json()
+//         const text = await response.text();
+//         if (!text) {
+//             throw new Error("Empty response from server.");
+//         }
+
+//         const data = JSON.parse(text);
+//         // console.log("data" ,data);
+//         // const data = await response.json();
+//         // Handle the response
+//         if (response.ok) {
+//             // Replace the thinking indicator with the actual response
+//             const botResponse = (String)(data.response);
+//             incomingMessageDiv.classList.remove("thinking");
+//             incomingMessageDiv.querySelector(".message-text").innerHTML = botResponse.replace(/\n/g, '<br>');
+            
+//             // Add to chat history
+//             chatHistory.push({
+//                 sender: "user",
+//                 message: userData.message
+//             });
+//             chatHistory.push({
+//                 sender: "bot",
+//                 message: botResponse
+//             });
+//         } else {
+//             // Handle error
+//             incomingMessageDiv.classList.remove("thinking");
+//             incomingMessageDiv.querySelector(".message-text").innerHTML = data.response || "Sorry, an error occurred.";
+//         }
+//     } catch (error) {
+//         console.error("Error communicating with the server:", error);
+//         incomingMessageDiv.classList.remove("thinking");
+//         incomingMessageDiv.querySelector(".message-text").innerHTML = "Sorry, I couldn't connect to the server. Please try again later.";
+//     }
+    
+//     // Scroll to the bottom of the chat
+//     chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
+// };
+
 const generateBotResponse = async (incomingMessageDiv) => {
     try {
-        // Get the current language
-        // const language = document.documentElement.lang || 'vi';
-        const language = 'vi';
-        
-        // Send the message to the server
         const response = await fetch('http://localhost:8000/api/chat', {
             method: 'POST',
             headers: {
@@ -33,54 +91,51 @@ const generateBotResponse = async (incomingMessageDiv) => {
             },
             body: JSON.stringify({
                 message: userData.message,
-                language: language
             }),
         });
-        // console.log(response);
-        // Kiểm tra phản hồi có rỗng không
-        if (!response.ok) {
+
+        if (!response.ok || !response.body) {
             throw new Error(`Server error: ${response.status} ${response.statusText}`);
         }
 
-        // Kiểm tra phản hồi có nội dung trước khi gọi .json()
-        const text = await response.text();
-        if (!text) {
-            throw new Error("Empty response from server.");
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+        let botResponse = "";
+
+        // Xóa hiệu ứng thinking
+        incomingMessageDiv.classList.remove("thinking");
+
+        // Đọc từng chunk và hiển thị
+        while (true) {
+            const { value, done } = await reader.read();
+            if (done) break;
+
+            const chunk = decoder.decode(value, { stream: true });
+            botResponse += chunk;
+
+            // Hiển thị từng phần của chunk
+            incomingMessageDiv.querySelector(".message-text").innerHTML = botResponse.replace(/\n/g, "<br>");
+            
         }
 
-        const data = JSON.parse(text);
-        // console.log("data" ,data);
-        // const data = await response.json();
-        // Handle the response
-        if (response.ok) {
-            // Replace the thinking indicator with the actual response
-            const botResponse = (String)(data.response);
-            incomingMessageDiv.classList.remove("thinking");
-            incomingMessageDiv.querySelector(".message-text").innerHTML = botResponse.replace(/\n/g, '<br>');
-            
-            // Add to chat history
-            chatHistory.push({
-                sender: "user",
-                message: userData.message
-            });
-            chatHistory.push({
-                sender: "bot",
-                message: botResponse
-            });
-        } else {
-            // Handle error
-            incomingMessageDiv.classList.remove("thinking");
-            incomingMessageDiv.querySelector(".message-text").innerHTML = data.response || "Sorry, an error occurred.";
-        }
+        // Sau khi hoàn tất, lưu vào history
+        chatHistory.push({
+            sender: "user",
+            message: userData.message
+        });
+        chatHistory.push({
+            sender: "bot",
+            message: botResponse
+        });
+
     } catch (error) {
         console.error("Error communicating with the server:", error);
         incomingMessageDiv.classList.remove("thinking");
         incomingMessageDiv.querySelector(".message-text").innerHTML = "Sorry, I couldn't connect to the server. Please try again later.";
     }
-    
-    // Scroll to the bottom of the chat
     chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
 };
+
 
 // Xử lý tin nhắn đi của người dùngdùng
 const handleOutgoingMessage = (e) => {

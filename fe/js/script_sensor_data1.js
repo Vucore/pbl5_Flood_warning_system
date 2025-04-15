@@ -17,6 +17,13 @@ let previousData = {
     waterLevel: 0
 };
 
+let threSold = {
+    tempChange: { value: 38, type: ">"},
+    pressureChange: { value: 1000, type: "<"},
+    humidityChange: { value: 85, type: ">"},
+    waterLevelChange: { value: 10, type: ">"},
+}
+
 // Hàm kết nối WebSocket
 function connectWebSocket() {
     if (socket && socket.readyState === WebSocket.OPEN) {
@@ -55,6 +62,10 @@ function connectWebSocket() {
             // updateChanges('soilHumidityChange', data.soil_humidity, previousData.soilHumidity);
             updateChanges('waterLevelChange', data.water_level, previousData.waterLevel);
 
+            checkThresold('tempChange', data.temperature, threSold.tempChange)
+            checkThresold('pressureChange', data.air_pressure, threSold.pressureChange)
+            checkThresold('humidityChange', data.air_humidity, threSold.humidityChange)
+            checkThresold('waterLevelChange', data.water_level, threSold.waterLevelChange)
             // updateWarning(data.temperature, data.rainfall, data.water_level);
             // updateCharts(data.temperature, data.rainfall, data.water_level, data.air_humidity, data.soil_humidity);
 
@@ -91,17 +102,49 @@ function updateChanges(elementId, newValue, oldValue) {
     const change = newValue - oldValue;
     const changeElement = document.getElementById(elementId);
     // console.log("newValue:", newValue, "oldValue:", oldValue);
+
     if (change > 0) {
+        changeElement.style.fontWeight = "normal";
         changeElement.textContent = `⬆ +${change.toFixed(2)} so với ngày hôm qua`;
         changeElement.style.color = '#28a745'; // Màu xanh cho thay đổi tích cực
     } else if (change < 0) {
+        changeElement.style.fontWeight = "normal";
         changeElement.textContent = `⬇ ${change.toFixed(2)} so với ngày hôm qua`;
         changeElement.style.color = '#dc3545'; // Màu đỏ cho thay đổi tiêu cực
     } else {
+        changeElement.style.fontWeight = "normal";
         changeElement.textContent = 'Không có sự thay đổi';
         changeElement.style.color = '#6c757d'; // Màu xám nếu không có thay đổi
     }
 }
+
+function checkThresold(elementId, newValue, threSold) {
+    const changeElement = document.getElementById(elementId);
+    const config = threSold;
+    // print(threSold)
+    if (!changeElement) {
+        console.warn("❌ Không tìm thấy phần tử:", elementId);
+        return;
+    }
+
+    if (!config) {
+        console.warn("❗ Không có ngưỡng cho:", elementId);
+        return;
+    }
+
+    const { value, type } = config;
+
+    let isWarning = false;
+    if (type === ">" && newValue > value) isWarning = true;
+    if (type === "<" && newValue < value) isWarning = true;
+
+    if (isWarning) {
+        changeElement.style.fontWeight = "bold";
+        changeElement.style.color = "red";
+        changeElement.textContent = `🚨 Chỉ số ở mức cảnh báo`;
+    }
+}
+
 
 // Hàm cập nhật cảnh báo khi nhiệt độ, lượng mưa, mực nước vượt mức nguy hiểm
 function updateWarning(temperature, rainfall, waterLevel) {

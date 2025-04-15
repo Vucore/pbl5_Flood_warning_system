@@ -30,7 +30,7 @@ let temperatureChart = new Chart(ctx, {
         scales: {
             y: {
                 min: 15, // Giá trị tối thiểu của trục y
-                max: 35, // Giá trị tối đa của trục y
+                max: 60, // Giá trị tối đa của trục y
                 grid: {
                     color: 'rgba(0, 0, 0, 0.1)',
                 },
