@@ -1,5 +1,8 @@
 fastapi
 numpy
+pypdf
+faiss-cpu
+rank_bm25
 websockets
 scikit-learn
 underthesea

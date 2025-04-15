@@ -11,9 +11,9 @@ async def simulate_esp8266():
         try:
             while True:
                 # Tạo dữ liệu giả lập
-                temperature = random.uniform(0.0, 100.0)
-                air_pressure = random.uniform(1000.0, 1020.0)
-                air_humidity = random.uniform(30.0, 70.0)
+                temperature = random.uniform(15.0, 50.0)
+                air_pressure = random.uniform(950.0, 1020.0)
+                air_humidity = random.uniform(30.0, 95.0)
                 rainfall = random.uniform(0.0, 1024.0)
                 soil_humidity = random.uniform(0.0, 1024.0)
                 water_level = random.uniform(0.0, 50.0)
