@@ -1,12 +1,8 @@
 from typing import Optional
 from fastapi import APIRouter
-from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-import logging
-import json
 from ..services import chatbot_services
-from ..services import handl_data_global
-# from ..ai.ChatBot.init import ChatbotBase
+import logging
 
 router = APIRouter()
 # Logging setup
@@ -24,26 +20,18 @@ async def chat_endpoint(request: ChatRequest):
         language = request.language
 
         if not user_message:
-            return JSONResponse(content={"response": "Please provide a message.", "language": language}, status_code=400)
-
-        # latest_data = json.loads(handl_data_global.get_current_data().body.decode("utf-8"))
-
-        # response = chatbot_services.process_message(
-        #     user_message,
-        #     language,
-        #     latest_data,
-        #     "normal"
-        # )
+            # return JSONResponse(content={"response": "Please provide a message.", "language": language}, status_code=400)
+            return "Please provide a message."
 
         response = chatbot_services.process_bot_response(
             user_message
         )
-        # response = chatbot.generate_response(user_input=user_message)
-
+        return response
         # Debug log response
-        logging.info(f"User message: {user_message}, Bot response: {response}")
-        return JSONResponse(content={"response": response, "language": language})
+        # logging.info(f"User message: {user_message}, Bot response: {response}")
+        # return JSONResponse(content={"response": response, "language": language})
     
     except Exception as e:
         logging.error(f"Server error: {e}")
-        return JSONResponse(content={"response": "An error occurred on the server.", "error": str(e)}, status_code=500)
+        # return JSONResponse(content={"response": "An error occurred on the server.", "error": str(e)}, status_code=500)
+        return "An error occurred on the server."
