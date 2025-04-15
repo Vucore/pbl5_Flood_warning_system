@@ -20,7 +20,6 @@ async def chat_endpoint(request: ChatRequest):
         language = request.language
 
         if not user_message:
-            # return JSONResponse(content={"response": "Please provide a message.", "language": language}, status_code=400)
             return "Please provide a message."
 
         response = chatbot_services.process_bot_response(

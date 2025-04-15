@@ -22,7 +22,7 @@ class Classifier:
 
             self.ml.fit(patterns_embeddings, self.tags)
 
-    def classify_predict(self, user_input: str, threshold: float = 0.75) -> str:
+    def classify_predict(self, user_input: str, threshold: float = 0.4) -> str:
         processed_input = preprocess_text(user_input)
 
         embedding_input = self.embedding.embed_query(processed_input)
@@ -36,7 +36,7 @@ class Classifier:
         # Trả về tag dự đoán
         pred_index = probabilities.argmax()
         pred_tag = self.ml.classes_[pred_index]  
-        if probabilities[pred_index] > 0.40:
+        if probabilities[pred_index] > threshold:
             return pred_tag    
 
         return "unknow"

@@ -13,22 +13,22 @@ class ResponseGenerator:
 
     def generate_response_sensor_data(self):
         try:
-                sensor_data = get_current_data_sensor()
+            sensor_data = get_current_data_sensor()
 
-                air_humidity = float(sensor_data.get('air_humidity', 0))
-                air_pressure = float(sensor_data.get('air_pressure', 0))
-                temperature = float(sensor_data.get('temperature', 0))
-                water_level = float(sensor_data.get('water_level', 0))
+            air_humidity = float(sensor_data.get('air_humidity', 0))
+            air_pressure = float(sensor_data.get('air_pressure', 0))
+            temperature = float(sensor_data.get('temperature', 0))
+            water_level = float(sensor_data.get('water_level', 0))
 
-                return (f"Chỉ số cảm biến hiện tại:\n"
-                        f"• Hiện tại: {sensor_data['timestamp']}\n"
-                        f"• Lượng mưa: {sensor_data['rainfall']}\n"
-                        f"• Độ ẩm đất: {sensor_data['soil_humidity']}\n"
-                        f"• Độ ẩm không khí: {air_humidity:.2f}%\n"
-                        f"• Áp suất không khí: {air_pressure:.2f}hPa\n"
-                        f"• Nhiệt độ: {temperature:.2f}°C\n"
-                        f"• Mực nước: {water_level:.2f}m\n"
-                        f"• Mức độ nguy hiểm: {sensor_data['warning_level']}\n")
+            return (f"Chỉ số cảm biến hiện tại:\n"
+                    f"• Hiện tại: {sensor_data['timestamp']}\n"
+                    f"• Lượng mưa: {sensor_data['rainfall']}\n"
+                    f"• Độ ẩm đất: {sensor_data['soil_humidity']}\n"
+                    f"• Độ ẩm không khí: {air_humidity:.2f}%\n"
+                    f"• Áp suất không khí: {air_pressure:.2f}hPa\n"
+                    f"• Nhiệt độ: {temperature:.2f}°C\n"
+                    f"• Mực nước: {water_level:.2f}m\n"
+                    f"• Mức độ nguy hiểm: {sensor_data['warning_level']}\n")
                 
         except Exception as e:
             return f"Lỗi khi lấy dữ liệu cảm biến: {str(e)}. Vui lòng thử lại sau."
