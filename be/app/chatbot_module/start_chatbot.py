@@ -1,9 +1,9 @@
 from fastapi import FastAPI
-from .routes import websocket, chatbot_routes
+from .routes import chatbot_routes
 from fastapi.middleware.cors import CORSMiddleware
-app = FastAPI()
+chatbot = FastAPI()
 
-app.add_middleware(
+chatbot.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Hoặc chỉ định frontend của bạn như ["http://localhost:3000"]
     allow_credentials=True,
@@ -12,5 +12,4 @@ app.add_middleware(
 )
 
 # Đăng ký router đúng cách
-app.include_router(chatbot_routes.router, prefix="/api")
-app.include_router(websocket.router)
+chatbot.include_router(chatbot_routes.router, prefix="/api")
