@@ -321,3 +321,47 @@ body.show-chatbot .chatbot-popup {
 .chat-form .chat-controls button:hover {
     background: #f1f1ff;
 }
+
+
+.chat-mode {
+    margin-right: 10px; 
+}
+.rag-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    background-color: white;
+    border: 1px solid #ccccf5;
+    background: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .rag-button .rag-icon {
+    display: none;
+    width: 8px;
+    height: 8px;
+    background-color: #6c63ff;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+  }
+  
+  .rag-button:hover {
+    background-color: #5350c4;
+    color: white;
+  }
+  
+  .rag-button:hover .rag-icon {
+    background-color: white;
+  }
+  
+  .rag-button.active {
+    border: 2px solid #5350c4;
+  }
+
+  .rag-button.active .rag-icon {
+    display: inline-block; /* Chỉ hiển thị khi có class 'active' */
+  }

@@ -3,7 +3,9 @@ const messageInput = document.querySelector(".message-input");
 const sendMessageButton = document.querySelector("#send-message");
 const chatbotToggler = document.querySelector("#chatbot-toggler");
 const closeChatbot = document.querySelector("#close-chatbot");
+const ragButton = document.querySelector('#toggle-rag');
 
+let isRagOn = false;
 const userData = {
     message: null,
 };
@@ -11,6 +13,12 @@ const userData = {
 const chatHistory = [];
 
 const initialInputHeight = messageInput ? messageInput.scrollHeight : 0;
+
+ragButton.addEventListener('click', () => {
+    ragButton.classList.toggle('active');
+    isRagOn = ragButton.classList.contains('active');
+    // console.log("RAG mode:", isRagOn ? "ON" : "OFF");
+  });
 
 const createMessageElement = (content, ...classes) => {
     const div = document.createElement("div");
@@ -91,6 +99,7 @@ const generateBotResponse = async (incomingMessageDiv) => {
             },
             body: JSON.stringify({
                 message: userData.message,
+                rag: isRagOn
             }),
         });
 
@@ -203,17 +212,4 @@ if (closeChatbot) {
     closeChatbot.addEventListener("click", () => document.body.classList.remove("show-chatbot"));
 }
 
-// Function to change language
-// function setLanguageForChat(lang) {
-//     document.documentElement.lang = lang;
-//     // Call the API to set the language
-//     fetch('/api/set-language', {
-//         method: 'POST',
-//         headers: {
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({
-//             language: lang
-//         }),
-//     });
-// }
+
