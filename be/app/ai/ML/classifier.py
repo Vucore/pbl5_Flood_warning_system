@@ -22,7 +22,7 @@ class Classifier:
 
             self.ml.fit(patterns_embeddings, self.tags)
 
-    def classify_predict(self, user_input: str, threshold: float = 0.4) -> str:
+    def classify_predict(self, user_input: str, threshold: float = 0.6) -> str:
         processed_input = preprocess_text(user_input)
 
         embedding_input = self.embedding.embed_query(processed_input)

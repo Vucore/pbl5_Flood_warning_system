@@ -13,7 +13,7 @@ def load_vietnamese_encoder_model():
     return tokenizer, model
 
 def load_model_Llama3():
-    llm = ChatOllama(model="llama3", temperature=0.0) 
+    llm = ChatOllama(model="llama3", temperature=0.1) 
     return llm
 
 

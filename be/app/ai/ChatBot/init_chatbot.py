@@ -39,4 +39,8 @@ class ChatbotBase:
             answer = self.response_generator.generate_response_from_local(pred_tag, self.flood_data)
             return StreamingResponse(stream_answer(answer=answer), media_type="text/plain; charset=utf-8")
         else:         
-            return self.response_generator.generate_agent_response(user_input)
+            answer = "Tôi không hiểu câu hỏi, vui lòng cung cấp thêm thông tin!"
+            return StreamingResponse(stream_answer(answer=answer), media_type="text/plain; charset=utf-8")
+        
+    def generate_response_RAG(self, user_input: str, session_id="default_user") -> str:
+        return self.response_generator.generate_agent_response(user_input)

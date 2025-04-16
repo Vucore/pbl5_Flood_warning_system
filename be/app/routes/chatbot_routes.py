@@ -10,6 +10,7 @@ logging.basicConfig(level=logging.INFO)
 
 class ChatRequest(BaseModel):
     message: str
+    rag: bool
     language: Optional[str] = None
 
 
@@ -17,15 +18,16 @@ class ChatRequest(BaseModel):
 async def chat_endpoint(request: ChatRequest):
     try:
         user_message = request.message
-        language = request.language
+        is_RAG = request.rag
 
         if not user_message:
             return "Please provide a message."
-
-        response = chatbot_services.process_bot_response(
-            user_message
-        )
-        return response
+        if is_RAG:
+            response = chatbot_services.process_bot_response_RAG(user_message)
+            return response
+        else:
+            response = chatbot_services.process_bot_response(user_message)
+            return response
         # Debug log response
         # logging.info(f"User message: {user_message}, Bot response: {response}")
         # return JSONResponse(content={"response": response, "language": language})
