@@ -1,6 +1,6 @@
 from langchain_community.vectorstores import FAISS
 from langchain.retrievers import EnsembleRetriever
-from .retriever import Retriever
+from .setup_retriever import Retriever
 
 class VectorDB:
     def __init__(self,
@@ -13,7 +13,7 @@ class VectorDB:
         self.docs = docs
         self.vector_db = vector_db
         self.embedding = embedding
-        self.db = self.__build_db(documents)
+        self.db = self.__build_db(docs)
         self.retriever_class = Retriever()
    
     def __build_db(self, docs):
@@ -22,7 +22,7 @@ class VectorDB:
         #     return max(0.0, min(1.0, score))
 
         db = self.vector_db.from_documents(
-            documents=self.docs,
+            documents=docs,
             embedding=self.embedding,
             # relevance_score_fn=normalize_score  # Thêm dòng này
         )
@@ -41,7 +41,7 @@ class VectorDB:
                                             search_type=search_type,
                                             search_kwargs=search_kwargs
                                             ), 
-                        self.retriever_class.build_retriever(self.documents, 4)
+                        self.retriever_class.build_retriever(self.documents, 5)
                         ],
                         weights=[0.7, 0.3],
         )

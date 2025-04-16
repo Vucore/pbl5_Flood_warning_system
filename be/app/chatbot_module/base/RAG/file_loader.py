@@ -1,4 +1,4 @@
-from langchain.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import PyPDFLoader
 from ..Utils.data_loader import get_path_pdf_data
 
 class PDFLoader():

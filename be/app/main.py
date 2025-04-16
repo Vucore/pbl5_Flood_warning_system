@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from .routes import websocket, chatbot_routes
+from .chatbot_module.routes import chatbot_routes
+from .data_module.routes import websocket
 from fastapi.middleware.cors import CORSMiddleware
 app = FastAPI()
 

@@ -14,7 +14,6 @@ class ResponseGenerator:
     def generate_response_sensor_data(self):
         try:
             sensor_data = GlobalState.get_current_data_sensor()
-            print(sensor_data)
             air_humidity = float(sensor_data.get('air_humidity', 0))
             air_pressure = float(sensor_data.get('air_pressure', 0))
             temperature = float(sensor_data.get('temperature', 0))
