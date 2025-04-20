@@ -30,9 +30,9 @@ cd be
 
 ### ✅ Cách 1: Chạy **2 module riêng biệt**
 
-#### 🌐 Module gửi nhận dữ liệu (WebSocket)
+#### 🌐 Module chính (WebSocket, data, function)
 ```bash
-uvicorn app.data_module.start_websocket:websoc --reload --port 8000
+uvicorn app.data_module.start_websocket:api --reload --port 8000
 ```
 
 #### 🤖 Module Chatbot
