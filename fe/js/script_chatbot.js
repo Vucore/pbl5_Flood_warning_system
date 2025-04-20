@@ -6,6 +6,8 @@ const closeChatbot = document.querySelector("#close-chatbot");
 const ragButton = document.querySelector('#toggle-rag');
 
 let isRagOn = false;
+let isThinking = false;
+
 const userData = {
     message: null,
 };
@@ -136,7 +138,9 @@ const generateBotResponse = async (incomingMessageDiv) => {
             sender: "bot",
             message: botResponse
         });
-
+        isThinking = false;
+        ragButton.classList.remove('disabled')
+        sendMessageButton.classList.remove('disabled')
     } catch (error) {
         console.error("Error communicating with the server:", error);
         incomingMessageDiv.classList.remove("thinking");
@@ -146,7 +150,7 @@ const generateBotResponse = async (incomingMessageDiv) => {
 };
 
 
-// Xử lý tin nhắn đi của người dùngdùng
+// Xử lý tin nhắn đi của người dùng
 const handleOutgoingMessage = (e) => {
     e.preventDefault();
     if (!messageInput) return;
@@ -185,8 +189,14 @@ const handleOutgoingMessage = (e) => {
 if (messageInput) {
     messageInput.addEventListener("keydown", (e) => {
         const userMessage = e.target.value.trim();
-        if(e.key === "Enter" && userMessage && !e.shiftKey && window.innerWidth > 768){
+        if(!isThinking && e.key === "Enter" && userMessage && !e.shiftKey && window.innerWidth > 768){
+            isThinking = true;
+            ragButton.classList.add('disabled')
+            sendMessageButton.classList.add('disabled')
             handleOutgoingMessage(e);
+        }
+        if (isThinking && e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault(); // Chặn gửi tin nhắn
         }
     });
 

@@ -18,8 +18,9 @@
             <i class="fas fa-bars"></i> Flood Monitoring System
         </div>
         <div class="header-right">
-            <span>🌍 Vietnamese</span>
-            <span>❓ Contact</span>
+            <span><button id="openModalBtn"><i class="fas fa-user-plus" style="color: #42bc75"></i>  Đăng ký</button></span>
+            <span><button>❓ Contact</button></span>
+            <span><button disabled>🌍 Vietnamese</button></span>
         </div>
     </header>
     <div class="warning" id="warning">
@@ -219,7 +220,7 @@
         </div>
         <div class="chat-footer">
             <form action="#" class="chat-form">
-                <textarea placeholder="Nhập tin nhắn của bạn..." class="message-input" required></textarea>
+                <textarea placeholder="Nhập câu hỏi của bạn..." class="message-input" required></textarea>
                 <div class="chat-mode">
                     <button type="button" id="toggle-rag" class="rag-button">  
                         <span class="rag-icon"></span>
@@ -231,12 +232,33 @@
             </form>
         </div>
     </div>
+
+    
+    <!-- Modal đăng ký -->
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeModalBtn">&times;</span>
+            <h2>Đăng ký thành viên</h2>
+            <form id="registerForm">
+                <label for="username">Họ và Tên</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="phone">Số điện thoại</label>
+                <input type="tel" id="phone" name="phone" required>
+
+                <label for="address">Địa chỉ</label>
+                <input type="address" id="address" name="address">
+
+                <button type="submit" id="register-btn">Đăng ký</button>
+            </form>
+        </div>
+    </div>
     <script src="../js/script_sensor_data1.js"></script>
     <script src="../js/script_chatbot.js"></script>
     <script src="../js/script_func.js"></script>
     <script src="../js/script_chart.js"></script>
-
-    
-
 </body>
 </html>

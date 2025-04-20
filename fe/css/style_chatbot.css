@@ -365,3 +365,15 @@ body.show-chatbot .chatbot-popup {
   .rag-button.active .rag-icon {
     display: inline-block; /* Chỉ hiển thị khi có class 'active' */
   }
+
+  .rag-button.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.chat-form .chat-controls #send-message.disabled {
+    opacity: 0.6;
+    pointer-events: none;
+    cursor: not-allowed;
+}
