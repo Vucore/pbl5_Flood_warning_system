@@ -1,5 +1,5 @@
 from langchain_community.document_loaders import PyPDFLoader
-from ..Utils.data_loader import get_path_pdf_data
+from ..Utils.path_loader import get_path_pdf_data
 
 class PDFLoader():
     def __init__(self):

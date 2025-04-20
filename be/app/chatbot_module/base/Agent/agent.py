@@ -56,14 +56,17 @@ class Agent():
         #                 agent=self.agent, 
         #                 tools=self.tools, 
         #                 verbose=True,
-        #                 handle_parsing_errors=True)
+        #                 handle_parsing_errors=True)                      Bạn là trợ lý thông minh chuyên về lũ lụt tại Việt Nam. Hãy dựa vào thông tin sau để trả lời câu hỏi bằng tiếng Việt và không sử dụng tiếng Anh:
         '''End Agent'''
 
         self.custom_prompt = PromptTemplate(
             input_variables=["context", "question"],
             template="""
-                    Bạn là trợ lý thông minh chuyên về lũ lụt tại Việt Nam. Hãy dựa vào thông tin sau để trả lời câu hỏi bằng tiếng Việt và không sử dụng tiếng Anh:
-
+                    Bạn là một trợ lý AI chuyên về cảnh báo lũ lụt, mực nước và lượng mưa hoặc các chỉ số thời tiết được cung cấp tài liệu.
+                    Chỉ dựa vào thông tin tìm được từ công cụ và kiến thức nội tại của bạn về chủ đề này để trả lời.
+                    Nếu không tìm thấy thông tin trong tài liệu, hãy nói rằng bạn không có thông tin đó trong tài liệu được cung cấp.
+                    Luôn trả lời bằng tiếng Việt một cách rõ ràng và chi tiết nhất có thể dựa trên thông tin có được
+                    
                     Thông tin:
                     {context}
 

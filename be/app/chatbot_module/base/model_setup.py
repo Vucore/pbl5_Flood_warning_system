@@ -4,7 +4,7 @@ from transformers import AutoTokenizer, AutoModel
 import os
 ENCODER_MODEL_NAME = 'bkai-foundation-models/vietnamese-bi-encoder'
 MODEL_LLMs_NAME = 'Llama-3.2-1B-Instruct-Q4_0.gguf'
-MAX_TOKENS = 20482048
+MAX_TOKENS = 2048
 
 def load_vietnamese_encoder_model():
     model_name = ENCODER_MODEL_NAME
