@@ -108,7 +108,6 @@ const generateBotResponse = async (incomingMessageDiv) => {
         if (!response.ok || !response.body) {
             throw new Error(`Server error: ${response.status} ${response.statusText}`);
         }
-
         const reader = response.body.getReader();
         const decoder = new TextDecoder("utf-8");
         let botResponse = "";
