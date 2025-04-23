@@ -4,7 +4,9 @@ from .ML.classifier import Classifier
 from .Utils.path_loader import load_flood_data_local
 from .response_generator import ResponseGenerator
 from .model_setup import load_model_Llama3
-from .Agent.agent import Agent
+from .Agent.rag_agent import RAGAgent
+from .Agent.email_agent import EmailAgent 
+from .Agent.tools import query_classifier
 import asyncio
 
 class ChatbotBase:
@@ -12,12 +14,13 @@ class ChatbotBase:
         self.llm = load_model_Llama3()
         self.embedding = CustomVietnameseEmbedding()
         self.intent_classifier = Classifier(self.embedding)
-        self.agent = Agent(self.llm, self.embedding)
-        self.response_generator = ResponseGenerator(self.agent)
+        self.rag_agent = RAGAgent(self.llm, self.embedding)
+        self.email_agent = EmailAgent()
+        self.response_generator = ResponseGenerator(self.rag_agent, self.email_agent)
 
         self.flood_data = load_flood_data_local()
         if self.flood_data:
-            self.intent_classifier.load_and_fit_patterns(flood_data=self.flood_data)
+            self.intent_classifier.setup_classifier(flood_data=self.flood_data)
 
     def generate_response(self, user_input: str, session_id="default_user") -> str:
         """Hàm sinh phản hồi từ người dùng"""
@@ -43,4 +46,21 @@ class ChatbotBase:
             return StreamingResponse(stream_answer(answer=answer), media_type="text/plain; charset=utf-8")
         
     def generate_response_RAG(self, user_input: str, session_id="default_user") -> str:
-        return self.response_generator.generate_agent_response(user_input)
+        question_type = query_classifier.invoke(user_input)
+        question_type = question_type.strip().lower()
+        print(question_type)
+        if 'simple' in question_type:
+            return self.response_generator.generate_RAGagent_response(user_input)
+        elif 'chat' in question_type:
+            return self.response_generator.generate_llm_response(user_input)
+        elif 'call' in question_type:
+            result = self.response_generator.call_email_agent()
+            async def stream_answer(answer: str):
+                try:
+                    for char in answer:
+                        yield char
+                        await asyncio.sleep(0.002)
+                except Exception as e:
+                    yield f"ERROR: {str(e)}"
+            return StreamingResponse(stream_answer(answer=result), media_type="text/plain; charset=utf-8")
+

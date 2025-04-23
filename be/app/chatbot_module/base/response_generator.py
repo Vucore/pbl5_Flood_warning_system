@@ -2,8 +2,9 @@ import random
 from ...data_module.Utils.global_state import GlobalState
 
 class ResponseGenerator:
-    def __init__(self, agent):
-        self.agent = agent
+    def __init__(self, rag_agent, email_agent):
+        self.rag_agent = rag_agent
+        self.email_agent = email_agent
 
     def generate_response_from_local(self, intent: str, flood_data: list) -> str:
         for item in flood_data:
@@ -32,5 +33,11 @@ class ResponseGenerator:
         except Exception as e:
             return f"Lỗi khi lấy dữ liệu cảm biến: {str(e)}. Vui lòng thử lại sau."
         
-    def generate_agent_response(self, message):
-        return self.agent.run(message)
+    def generate_RAGagent_response(self, message):
+        return self.rag_agent.run_rag(message)
+    
+    def generate_llm_response(self, message):
+        return self.rag_agent.run_llm(message)
+    
+    def call_email_agent(self):
+        return self.email_agent.run_email_agent()

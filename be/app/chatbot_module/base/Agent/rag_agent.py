@@ -12,7 +12,7 @@ import asyncio
 import functools
 import logging
 
-class Agent():
+class RAGAgent():
     def __init__(self, llm, embedding):
         self.llm = llm
         self.embedding = embedding
@@ -59,6 +59,28 @@ class Agent():
         #                 handle_parsing_errors=True)                      Bạn là trợ lý thông minh chuyên về lũ lụt tại Việt Nam. Hãy dựa vào thông tin sau để trả lời câu hỏi bằng tiếng Việt và không sử dụng tiếng Anh:
         '''End Agent'''
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         self.custom_prompt = PromptTemplate(
             input_variables=["context", "question"],
             template="""
@@ -75,6 +97,7 @@ class Agent():
                     Hãy trả lời bằng tiếng Việt!
                     """,
                     )
+    
         # self.qa_chain = RetrievalQA.from_chain_type(
         #     llm=self.llm,
         #     retriever=self.retriever,
@@ -83,9 +106,7 @@ class Agent():
         #     chain_type_kwargs={"prompt": self.custom_prompt},
         # )
 
-
-
-    def run(self, query: str):
+    def run_rag(self, query: str):
         async def stream_answer(llm, prompt: str):
             for chunk in llm.stream(prompt):
                 if hasattr(chunk, "content"):
@@ -98,7 +119,7 @@ class Agent():
             docs = self.retriever.invoke(query)  
 
             context = "\n".join([doc.page_content for doc in docs])
-            max_context_length = 2000  # Giới hạn độ dài tối đa của context
+            max_context_length = 10000  # Giới hạn độ dài tối đa của context
             if len(context) > max_context_length:
                 context = context[:max_context_length]
             # 2. Tạo prompt
@@ -110,6 +131,19 @@ class Agent():
 
         return StreamingResponse(generate_response(), media_type="text/plain; charset=utf-8")
 
+    def run_llm(self, query: str):
+        async def stream_answer(llm, prompt: str):
+            for chunk in llm.stream(prompt):
+                if hasattr(chunk, "content"):
+                    for token in chunk.content:
+                        yield token
+                        await asyncio.sleep(0.002)
+        prompt = "Hãy trả lời bằng tiếng Việt cho câu hỏi {}".format(query)
+        async def generate_response():
+            async for token in stream_answer(self.llm, prompt):
+                yield token
+        return StreamingResponse(generate_response(), media_type="text/plain; charset=utf-8")
+    
     # def run(self, query: str):
     #     try:  
     #         async def generate_response():

@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from .chatbot_module.routes import chatbot_routes
 from .data_module.routes import websocket, func_routes
 from fastapi.middleware.cors import CORSMiddleware
+import logging
+
 app = FastAPI()
 
 app.add_middleware(

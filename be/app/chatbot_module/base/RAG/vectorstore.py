@@ -22,10 +22,11 @@ class VectorDB:
         #     return max(0.0, min(1.0, score))
 
         db = self.vector_db.from_documents(
-            documents=docs,
             embedding=self.embedding,
+            documents=docs,
             # relevance_score_fn=normalize_score  # Thêm dòng này
         )
+        
         return db
 
     def get_ensemble_retriever(self,

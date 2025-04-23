@@ -13,4 +13,8 @@ class TextSplitter():
         )
     def splitter_documents(self, documents):
         docs = self.splitter.split_documents(documents=documents)
+        # for i, doc in enumerate(docs):
+        #     print(f"--- Document {i+1} ---")
+        #     print(doc.page_content)
+        #     print("\n")
         return docs

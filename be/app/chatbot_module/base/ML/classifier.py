@@ -9,17 +9,16 @@ class Classifier:
         self.tags = []
         self.responses = []
 
-    def load_and_fit_patterns(self, flood_data: list):
+    def setup_classifier(self, flood_data: list):
         for item in flood_data:
             self.patterns.extend([preprocess_text(pattern) for pattern in item["patterns"]])
             self.tags.extend([item["tag"]] * len(item["patterns"]))
             self.responses.append(item["responses"])
-        self.encoder_and_fit()
-    def encoder_and_fit(self):
+        self.embedding_and_fit()
+    def embedding_and_fit(self):
         if self.patterns:
             # Huấn luyện vectorizer và mô hình một lần khi tải dữ liệu
             patterns_embeddings = self.embedding.embed_documents(self.patterns)
-
             self.ml.fit(patterns_embeddings, self.tags)
 
     def classify_predict(self, user_input: str, threshold: float = 0.6) -> str:
