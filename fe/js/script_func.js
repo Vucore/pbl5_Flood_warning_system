@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function sendRegisterData(data) {
 	try {
-		const response = await fetch("http://localhost:8000/api/register", {
+		const response = await fetch(`${API_REGISTER}`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json"

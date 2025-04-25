@@ -94,7 +94,7 @@ const createMessageElement = (content, ...classes) => {
 
 const generateBotResponse = async (incomingMessageDiv) => {
     try {
-        const response = await fetch('http://localhost:8000/api/chat', {
+        const response = await fetch(`${API_CHAT}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

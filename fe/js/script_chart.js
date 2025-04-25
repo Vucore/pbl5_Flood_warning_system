@@ -1,4 +1,6 @@
 // Khởi tạo biểu đồ nhiệt độ
+import { getLatestData } from './socket.js';
+
 const ctx = document.getElementById('temperatureChart').getContext('2d');
 let temperatureChart = new Chart(ctx, {
     type: 'line',
@@ -388,32 +390,40 @@ function updateTemperatureChart(data) {
 }
 
 // Kết nối với WebSocket để nhận dữ liệu thời gian thực
-let chartSocket = new WebSocket('ws://localhost:8000/ws');
+// let chartSocket = new WebSocket(`${API_CHART}`);
 
-chartSocket.onmessage = function (event) {
-    if (event.data === "ping") {
-        return;
+// chartSocket.onmessage = function (event) {
+//     if (event.data === "ping") {
+//         return;
+//     }
+//     try {
+//         // Parse dữ liệu JSON
+//         const data = JSON.parse(event.data);
+
+//         // Kiểm tra dữ liệu hợp lệ
+//         if (data && data.temperature !== undefined) {
+//             updateTemperatureChart(data);
+//             console.log("Dữ liệu biểu đồ:", data);
+//         }
+//     } catch (error) {
+//         console.error("Lỗi khi xử lý dữ liệu biểu đồ:", error);
+//     }
+// };
+
+// chartSocket.onclose = function () {
+//     console.log("Mất kết nối WebSocket cho biểu đồ. Đang kết nối lại...");
+//     setTimeout(() => {
+//         chartSocket = new WebSocket(`${API_CHART}`);
+//     }, 1000);
+// };
+
+setInterval(() => {
+    const data = getLatestData();
+    if (data) {
+        updateTemperatureChart(data)
     }
-    try {
-        // Parse dữ liệu JSON
-        const data = JSON.parse(event.data);
+}, 5000);
 
-        // Kiểm tra dữ liệu hợp lệ
-        if (data && data.temperature !== undefined) {
-            updateTemperatureChart(data);
-            console.log("Dữ liệu biểu đồ:", data);
-        }
-    } catch (error) {
-        console.error("Lỗi khi xử lý dữ liệu biểu đồ:", error);
-    }
-};
-
-chartSocket.onclose = function () {
-    console.log("Mất kết nối WebSocket cho biểu đồ. Đang kết nối lại...");
-    setTimeout(() => {
-        chartSocket = new WebSocket('ws://localhost:8000/ws');
-    }, 1000);
-};
 
 document.addEventListener('DOMContentLoaded', function () {
     // Xử lý sự kiện click cho các nút chuyển đổi biểu đồ
