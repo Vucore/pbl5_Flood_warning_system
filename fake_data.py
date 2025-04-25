@@ -4,7 +4,7 @@ import random
 
 async def simulate_esp8266():
     uri = "ws://localhost:8000/ws"   # Địa chỉ WebSocket server của bạn
-
+    # uri = "wss://ff5f-2405-4802-95c3-45c0-6503-7828-7c90-7477.ngrok-free.app/ws"  
     async with websockets.connect(uri) as websocket:
         print("Connected to WebSocket server")
 
@@ -23,7 +23,7 @@ async def simulate_esp8266():
                 await websocket.send(data)
                 print(f"Sent: {data}")
 
-                # Đợi 2 giây trước khi gửi dữ liệu tiếp theo
+                # Đợi 5 giây trước khi gửi dữ liệu tiếp theo
                 await asyncio.sleep(5)
 
         except Exception as e:
