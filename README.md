@@ -45,6 +45,8 @@ uvicorn app.chatbot_module.start_chatbot:chatbot --reload --port 8001
 ### ✅ Cách 2: Chạy đồng thời cả 2 module qua `main`
 ```bash
 uvicorn app.main:app --reload --port 8000
+uvicorn app.main:app --host 0.0.0.0 --port 8000
+
 ```
 
 ---
