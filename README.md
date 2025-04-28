@@ -1,4 +1,3 @@
-
 # 🌊 PBL5 - Flood Warning System
 
 Đồ án Kỹ thuật máy tính - Cảnh báo lũ lụt sử dụng dữ liệu cảm biến thời gian thực và Chatbot AI.
@@ -82,6 +81,17 @@ ollama run llama3
 
 ---
 
+## 🛠️ Công nghệ sử dụng
+
+- **FastAPI**: Framework backend chính.
+- **WebSocket**: Giao tiếp thời gian thực.
+- **Ollama**: Chạy mô hình LLaMA3 cục bộ.
+- **Chroma**: Vector database để lưu trữ và truy vấn embedding.
+- **LangChain**: Xây dựng pipeline cho chatbot AI.
+- **Huggingface Transformers**: Sử dụng embedding Vietnamese custom từ Huggingface.
+
+---
+
 ## 📁 Cấu trúc thư mục
 
 ```
@@ -94,7 +104,7 @@ PBL5_Flood_warning_system/
 │   │   └── main.py             # Tích hợp cả websocket và chatbot
 │   └── ...
 │
-├── fefe/                        
+├── fe/                        
 │   ├── css/
 │   ├── html/
 │   ├── js/
