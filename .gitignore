@@ -2,3 +2,4 @@
 *.db
 models/
 venv/
+chroma_db/
