@@ -1,7 +1,7 @@
 from langchain_community.llms import GPT4All as LangChainGPT4All
 from langchain_community.chat_models import ChatOllama
 from transformers import AutoTokenizer, AutoModel
-import os
+
 ENCODER_MODEL_NAME = 'bkai-foundation-models/vietnamese-bi-encoder'
 MODEL_LLMs_NAME = 'Llama-3.2-1B-Instruct-Q4_0.gguf'
 MAX_TOKENS = 2048

@@ -8,7 +8,9 @@ from langchain.chains import RetrievalQA
 from ..RAG.file_loader import PDFLoader
 from ..RAG.setup_spilitter import TextSplitter
 from ..RAG.vectorstore import VectorDB
+from ..RAG.setup_retriever import Retriever
 import asyncio
+from typing import List
 import functools
 import logging
 
@@ -17,13 +19,31 @@ class RAGAgent():
         self.llm = llm
         self.embedding = embedding
         self.pdf_loader = PDFLoader()
-        self.splitter = TextSplitter()
-        self.vectorstore = VectorDB(documents=self.pdf_loader.load_docs(), 
-                                    docs=self.splitter.splitter_documents(self.pdf_loader.load_docs()),
-                                    embedding=self.embedding,
-                                    )
-        self.retriever = self.vectorstore.get_ensemble_retriever()
+        # self.pdf_file = PDFLoader().load_docs()
+        self.splitter_class = TextSplitter()
+        self.vectorstore = None
+        self.retriever_class = Retriever()
+        self.retriever = None
+        self.ensemble_retriever = None
+        # self.vectorstore = VectorDB(documents=self.pdf_file, 
+        #                             docs=self.splitter.splitter_documents(self.pdf_file),
+        #                             embedding=self.embedding,
+        #                             )
+        # self.retriever = self.vectorstore.get_ensemble_retriever()
+        self.process_documents()
+        self.build_ensemble_retriever()
 
+    def process_documents(self):
+        documents = self.pdf_loader.load_docs()
+        docs = self.splitter_class.splitter_documents(documents=documents)
+        self.vectorstore = VectorDB(docs=docs,
+                                          embedding=self.embedding
+                                        ).get_vectorstore()
+        self.retriever = self.retriever_class.build_retriever(docs=docs, k=4)
+
+    def build_ensemble_retriever(self):
+        self.ensemble_retriever = self.retriever_class.get_ensemble_retriever(vectorstore=self.vectorstore, retriever=self.retriever)
+        
         '''Agent'''
         # self.retriever_tool = create_retriever_tool(
         #     self.retriever,  
@@ -115,11 +135,11 @@ class RAGAgent():
                         await asyncio.sleep(0.002)
 
         async def generate_response():
-            # 1. Truy xuất tài liệu liên quan
-            docs = self.retriever.invoke(query)  
+
+            docs = self.ensemble_retriever.invoke(query)  
 
             context = "\n".join([doc.page_content for doc in docs])
-            max_context_length = 10000  # Giới hạn độ dài tối đa của context
+            max_context_length = 10000  
             if len(context) > max_context_length:
                 context = context[:max_context_length]
             # 2. Tạo prompt
