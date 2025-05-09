@@ -7,3 +7,4 @@ chroma_db/
 *.sqlite3
 !.env.example
 be/pbl5-microbit-firebase-adminsdk-*.json
+*.json
