@@ -3,3 +3,6 @@
 models/
 venv/
 chroma_db/
+.env
+*.db
+*.sqlite3
