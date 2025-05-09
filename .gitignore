@@ -8,3 +8,4 @@ chroma_db/
 !.env.example
 be/pbl5-microbit-firebase-adminsdk-*.json
 *.json
+!*.example.json
