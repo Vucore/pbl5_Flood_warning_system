@@ -2,12 +2,12 @@ import json
 import os
 from typing import List
 
-def load_flood_data_local():
+def load_json_local_data(json_name: str):
     # Đường dẫn tuyệt đối tới thư mục chứa file hiện tại (Utils)
     current_dir = os.path.dirname(os.path.abspath(__file__))
 
     # Di chuyển lên 1 cấp rồi vào thư mục ChatBot/data
-    file_path = os.path.abspath(os.path.join(current_dir, "..", "data", "responses.json"))
+    file_path = os.path.abspath(os.path.join(current_dir, "..", "data", json_name))
 
     try:
         with open(file_path, "r", encoding="utf-8") as f:
@@ -27,7 +27,7 @@ def load_flood_data_local():
 #     except FileNotFoundError:
 #         raise FileNotFoundError(f"File not found at {file_path}. Please ensure responses.json exists in ChatBot/data directory.")
     
-def get_path_pdf_data() -> List[str]:
+def get_path_and_name_pdf_data() -> List[str]:
     # Đường dẫn tuyệt đối tới thư mục "data"
     current_dir = os.path.dirname(os.path.abspath(__file__))
     data_dir = os.path.join(current_dir, "..", "data")

@@ -1,11 +1,11 @@
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.schema import Document
 from typing import List
-from ..Utils.get_path_file import get_path_pdf_data
+from ..Utils.get_path_file import get_path_and_name_pdf_data
 
 class PDFLoader():
     def __init__(self):
-        self.pdf_paths, self.doc_name = get_path_pdf_data()
+        self.pdf_paths, self.doc_name = get_path_and_name_pdf_data()
     # def load_docs(self):
     #     loader = PyPDFLoader(self.pdf_path)
     #     documents = loader.load()    

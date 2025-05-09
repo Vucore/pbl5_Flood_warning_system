@@ -19,17 +19,11 @@ class RAGAgent():
         self.llm = llm
         self.embedding = embedding
         self.pdf_loader = PDFLoader()
-        # self.pdf_file = PDFLoader().load_docs()
         self.splitter_class = TextSplitter()
         self.vectorstore = None
         self.retriever_class = Retriever()
         self.retriever = None
         self.ensemble_retriever = None
-        # self.vectorstore = VectorDB(documents=self.pdf_file, 
-        #                             docs=self.splitter.splitter_documents(self.pdf_file),
-        #                             embedding=self.embedding,
-        #                             )
-        # self.retriever = self.vectorstore.get_ensemble_retriever()
         self.process_documents()
         self.build_ensemble_retriever()
 
@@ -43,63 +37,6 @@ class RAGAgent():
 
     def build_ensemble_retriever(self):
         self.ensemble_retriever = self.retriever_class.get_ensemble_retriever(vectorstore=self.vectorstore, retriever=self.retriever)
-        
-        '''Agent'''
-        # self.retriever_tool = create_retriever_tool(
-        #     self.retriever,  
-        #     "find_documents",
-        #     "Find information in the text and answer questions."
-        # )
-
-        # self.tools = [self.retriever_tool]
-
-        # Tạo prompt template
-        # self.system_prompt = """Bạn là một trợ lý AI chuyên về cảnh báo lũ lụt, mực nước sông và lượng mưa hoặc các chỉ số thời tiết ở khu vực được cung cấp tài liệu.
-        #                     Chỉ dựa vào thông tin tìm được từ công cụ và kiến thức nội tại của bạn về chủ đề này để trả lời.
-        #                     Nếu không tìm thấy thông tin trong tài liệu, hãy nói rằng bạn không có thông tin đó trong tài liệu được cung cấp.
-        #                     Luôn trả lời bằng tiếng Việt một cách rõ ràng và chi tiết nhất có thể dựa trên thông tin có được."""
-
-        # self.prompt = ChatPromptTemplate.from_messages([
-        #     ("system", self.system_prompt),
-        #     ("human", "{input}"),
-        #     MessagesPlaceholder(variable_name="agent_scratchpad")
-        # ])
-
-        # # Tạo agent từ LLM, prompt và tools
-        # self.agent = create_openai_functions_agent(
-        #                 llm=self.llm, 
-        #                 tools=self.tools, 
-        #                 prompt=self.prompt)
-
-        # # Tạo agent executor để sử dụng
-        # self.executor = AgentExecutor(
-        #                 agent=self.agent, 
-        #                 tools=self.tools, 
-        #                 verbose=True,
-        #                 handle_parsing_errors=True)                      Bạn là trợ lý thông minh chuyên về lũ lụt tại Việt Nam. Hãy dựa vào thông tin sau để trả lời câu hỏi bằng tiếng Việt và không sử dụng tiếng Anh:
-        '''End Agent'''
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         self.custom_prompt = PromptTemplate(
             input_variables=["context", "question"],
@@ -107,7 +44,7 @@ class RAGAgent():
                     Bạn là một trợ lý AI chuyên về cảnh báo lũ lụt, mực nước và lượng mưa hoặc các chỉ số thời tiết được cung cấp tài liệu.
                     Chỉ dựa vào thông tin tìm được từ công cụ và kiến thức nội tại của bạn về chủ đề này để trả lời.
                     Nếu không tìm thấy thông tin trong tài liệu, hãy nói rằng bạn không có thông tin đó trong tài liệu được cung cấp.
-                    Luôn trả lời bằng tiếng Việt một cách rõ ràng và chi tiết nhất có thể dựa trên thông tin có được
+                    Luôn trả lời bằng tiếng Việt một cách rõ ràng và chi tiết nhất có thể dựa trên thông tin có được, không thêm bất kỳ văn bản nào khác.
                     
                     Thông tin:
                     {context}
@@ -117,14 +54,6 @@ class RAGAgent():
                     Hãy trả lời bằng tiếng Việt!
                     """,
                     )
-    
-        # self.qa_chain = RetrievalQA.from_chain_type(
-        #     llm=self.llm,
-        #     retriever=self.retriever,
-        #     return_source_documents=False,
-        #     chain_type="stuff",
-        #     chain_type_kwargs={"prompt": self.custom_prompt},
-        # )
 
     def run_rag(self, query: str):
         async def stream_answer(llm, prompt: str):
@@ -142,10 +71,9 @@ class RAGAgent():
             max_context_length = 10000  
             if len(context) > max_context_length:
                 context = context[:max_context_length]
-            # 2. Tạo prompt
+        
             prompt = self.custom_prompt.format(context=context, question=query)
 
-            # 3. Trả về chuỗi stream từng token
             async for token in stream_answer(self.llm, prompt):
                 yield token
 
@@ -164,6 +92,16 @@ class RAGAgent():
                 yield token
         return StreamingResponse(generate_response(), media_type="text/plain; charset=utf-8")
     
+
+        # self.qa_chain = RetrievalQA.from_chain_type(
+    #     llm=self.llm,
+    #     retriever=self.retriever,
+    #     return_source_documents=False,
+    #     chain_type="stuff",
+    #     chain_type_kwargs={"prompt": self.custom_prompt},
+    # )
+
+
     # def run(self, query: str):
     #     try:  
     #         async def generate_response():
@@ -183,3 +121,39 @@ class RAGAgent():
     #     except Exception as e:
     #         logging.error(f"Server error: {e}")
     #         return "An error occurred on the server."
+
+
+        '''Agent'''
+    # self.retriever_tool = create_retriever_tool(
+    #     self.retriever,  
+    #     "find_documents",
+    #     "Find information in the text and answer questions."
+    # )
+
+    # self.tools = [self.retriever_tool]
+
+    # Tạo prompt template
+    # self.system_prompt = """Bạn là một trợ lý AI chuyên về cảnh báo lũ lụt, mực nước sông và lượng mưa hoặc các chỉ số thời tiết ở khu vực được cung cấp tài liệu.
+    #                     Chỉ dựa vào thông tin tìm được từ công cụ và kiến thức nội tại của bạn về chủ đề này để trả lời.
+    #                     Nếu không tìm thấy thông tin trong tài liệu, hãy nói rằng bạn không có thông tin đó trong tài liệu được cung cấp.
+    #                     Luôn trả lời bằng tiếng Việt một cách rõ ràng và chi tiết nhất có thể dựa trên thông tin có được."""
+
+    # self.prompt = ChatPromptTemplate.from_messages([
+    #     ("system", self.system_prompt),
+    #     ("human", "{input}"),
+    #     MessagesPlaceholder(variable_name="agent_scratchpad")
+    # ])
+
+    # # Tạo agent từ LLM, prompt và tools
+    # self.agent = create_openai_functions_agent(
+    #                 llm=self.llm, 
+    #                 tools=self.tools, 
+    #                 prompt=self.prompt)
+
+    # # Tạo agent executor để sử dụng
+    # self.executor = AgentExecutor(
+    #                 agent=self.agent, 
+    #                 tools=self.tools, 
+    #                 verbose=True,
+    #                 handle_parsing_errors=True)
+    '''End Agent'''

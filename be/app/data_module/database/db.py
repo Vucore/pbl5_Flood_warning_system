@@ -12,9 +12,9 @@ class UserService:
             os.makedirs(os.path.dirname(abs_path), exist_ok=True)  # Tạo thư mục nếu chưa có
             self.conn = sqlite3.connect(db_path, check_same_thread=False)
             self.cursor = self.conn.cursor()
-            # self._create_table()
 
-    def _create_table(self):
+
+    def create_table(self):
         self.cursor.execute("""
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -115,53 +115,3 @@ def get_all_users_from_db(db_path: str):
             "message": "Không thể lấy danh sách người dùng",
             "error": str(e)
         }
-
-
-# class ChatbotService():
-#     def __init__(self, db_path: str):
-#         abs_path = os.path.abspath(db_path)
-#         os.makedirs(os.path.dirname(abs_path), exist_ok=True)  # Tạo thư mục nếu chưa có
-#         self.conn = sqlite3.connect(db_path, check_same_thread=False)  # Cho phép dùng trong FastAPI
-#         self.cursor = self.conn.cursor()
-#         self._create_tables()
-#     def _create_tables(self):
-#         # Tạo bảng patterns nếu chưa có
-#         self.cursor.execute("""
-#             CREATE TABLE IF NOT EXISTS patterns (
-#                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-#                 pattern TEXT NOT NULL,
-#                 embedding BLOB NOT NULL
-#             )
-#         """)
-
-#         self.conn.commit()
-#     def save_pattern_and_embedding(self, pattern: str, embedding):
-#         """
-#         Lưu một pattern và embedding của nó vào cơ sở dữ liệu SQLite.
-#         """
-#         try:
-#             # Lưu embedding dưới dạng nhị phân
-#             embedding_blob = pickle.dumps(embedding)
-
-#             self.cursor.execute("""
-#                 INSERT INTO patterns (pattern, embedding)
-#                 VALUES (?, ?)
-#             """, (pattern, embedding_blob))
-#             self.conn.commit()
-
-#             return {
-#                 "success": True,
-#                 "message": "Pattern và embedding đã được lưu thành công"
-#             }
-        
-#         except Exception as e:
-#             print("Lỗi khi lưu pattern và embedding:", e)
-#             return {
-#                 "success": False,
-#                 "message": "Lưu pattern và embedding thất bại",
-#                 "error": str(e)
-#             }
-
-#     def __del__(self):
-#         self.conn.close()
-

@@ -6,9 +6,9 @@ class ResponseGenerator:
         self.rag_agent = rag_agent
         self.email_agent = email_agent
 
-    def generate_response_from_local(self, intent: str, flood_data: list) -> str:
+    def generate_response_from_local(self, pred_tag: str, flood_data: list) -> str:
         for item in flood_data:
-            if item["tag"] == intent:
+            if item["tag"] == pred_tag:
                 return random.choice(item["responses"])
         return "Dữ liệu không đủ để trả lời câu hỏi của bạn."
 

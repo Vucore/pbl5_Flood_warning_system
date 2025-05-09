@@ -1,6 +1,5 @@
 from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnableSequence
-from langchain_core.output_parsers import StrOutputParser
 from langchain.tools import tool
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -8,10 +7,13 @@ from ....data_module.database.db import get_all_users_from_db
 from ..model_setup import load_model_Llama3
 from datetime import datetime
 import smtplib
+import os
+from dotenv import load_dotenv
 
-GMAIL_USER = 'emsimv10@gmail.com'
-GMAIL_PASS = 'vrlinivaocehbnzh'      # ← App password từ Google
+load_dotenv() 
 
+GMAIL_USER = os.getenv("GMAIL_USER")
+GMAIL_PASS = os.getenv("GMAIL_PASS")   
 # Viết mail
 def generate_email(username, address, date):
     llm = load_model_Llama3(temperature=0.1)
@@ -81,34 +83,35 @@ def get_user():
         print("Lỗi khi lấy dữ liệu:", result["message"])
         return []
 
-
-def adaptive_approach(query: str):
-    # Prompt phân loại
-    llm = load_model_Llama3(temperature=0.1)
-    query_classifier_prompt = PromptTemplate.from_template("""
-    Phân loại câu hỏi sau thành 1 trong 3 loại:
-    - "chat" nếu là trò chuyện hoặc kiến thức phổ thông
-    - "simple" nếu là câu hỏi liên quan đến vấn đề lũ lụt, thiên tai, giải pháp ứng phó, hậu quả của lũ lụt,.. cần truy xuất thông tin trong tài liệu
-    - "call" nếu câu có ý nghĩa như muốn gửi cảnh báo, gửi email, gửi thư,... đến người dùng 
-
-    Câu hỏi: {query}
-    Loại câu hỏi (chỉ trả về: chat, simple, call):
-    """)
-
-    chain = RunnableSequence(
-        query_classifier_prompt | llm | StrOutputParser()
-    )
-    return chain.invoke({
-        "query": query,
-    })
-
-@tool
-def query_classifier(query: str):
-    """Phân loại câu hỏi người dùng"""
-    question_type = adaptive_approach(query)
-    return question_type
-
 def get_current_datetime():
     """Lấy ngày và giờ hiện tại"""
     current_datetime = datetime.now()
     return current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+
+
+'''Adaptive RAG with LLM'''
+# def adaptive_approach(query: str):
+#     # Prompt phân loại
+#     llm = load_model_Llama3(temperature=0.1)
+#     query_classifier_prompt = PromptTemplate.from_template("""
+#     Phân loại câu hỏi sau thành 1 trong 3 loại:
+#     - "chat" nếu là trò chuyện hoặc kiến thức phổ thông
+#     - "simple" nếu là câu hỏi liên quan đến vấn đề lũ lụt, thiên tai, giải pháp ứng phó, hậu quả của lũ lụt,.. cần truy xuất thông tin trong tài liệu
+#     - "call" nếu câu có ý nghĩa như muốn gửi cảnh báo, gửi email, gửi thư,... đến người dùng 
+
+#     Câu hỏi: {query}
+#     Loại câu hỏi (chỉ trả về: chat, simple, call):
+#     """)
+
+#     chain = RunnableSequence(
+#         query_classifier_prompt | llm | StrOutputParser()
+#     )
+#     return chain.invoke({
+#         "query": query,
+#     })
+
+# @tool
+# def query_classifier(query: str):
+#     """Phân loại câu hỏi người dùng"""
+#     question_type = adaptive_approach(query)
+#     return question_type
