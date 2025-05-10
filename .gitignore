@@ -1,11 +1,32 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+
+# Compiled models and databases
 *.gguf
 *.db
-models/
-venv/
-chroma_db/
-.env
 *.sqlite3
+
+# Virtual environment
+venv/
+
+# Chroma DB folder
+chroma_db/
+
+# Environment files
+.env
 !.env.example
-be/pbl5-microbit-firebase-adminsdk-*.json
+
+# JSON files (ignore all, except *.example.json)
 *.json
 !*.example.json
+
+# Firebase admin SDK key (in specific path)
+be/pbl5-microbit-firebase-adminsdk-*.json
+
+# Model directory
+models/
+
+# IDE configs
+.vscode/
+.idea/
