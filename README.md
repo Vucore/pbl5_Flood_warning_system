@@ -191,9 +191,12 @@ Chứa các câu trả lời tương ứng với các tag:
 - **FastAPI**: Framework backend chính.
 - **WebSocket**: Giao tiếp thời gian thực.
 - **Ollama**: Chạy mô hình LLaMA3 cục bộ.
+- **Firebase Realtime Database**: Lưu trữ và đồng bộ dữ liệu cảm biến theo thời gian thực.
 - **Chroma**: Vector database để lưu trữ và truy vấn embedding.
 - **LangChain**: Xây dựng pipeline cho chatbot AI.
 - **Huggingface Transformers**: Sử dụng embedding Vietnamese custom từ Huggingface.
+- **RAG (Retrieval-Augmented Generation)**: Tăng cường chất lượng phản hồi của chatbot bằng cách truy xuất thông tin từ nguồn dữ liệu về lũ lụt.
+- **Adaptive Response**: Tự động điều chỉnh phản hồi dựa trên ngữ cảnh và dữ liệu cảm biến thời gian thực.
 
 ---
 
