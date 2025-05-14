@@ -7,7 +7,7 @@ load_dotenv()
 
 ENCODER_MODEL_NAME = os.getenv("ENCODER_MODEL_NAME")
 
-MAX_TOKENS = 2048
+MAX_TOKENS_Llama = 4096
 
 def load_vietnamese_encoder_model():
     model_name = ENCODER_MODEL_NAME
@@ -16,5 +16,5 @@ def load_vietnamese_encoder_model():
     return tokenizer, model
 
 def load_model_Llama3(temperature: float = 0.1):
-    llm = ChatOllama(model="llama3", temperature=temperature, max_tokens=MAX_TOKENS) 
+    llm = ChatOllama(model="llama3", temperature=temperature, max_tokens=MAX_TOKENS_Llama) 
     return llm

@@ -1,24 +1,16 @@
-from langchain.tools.retriever import create_retriever_tool
-from langchain.agents import AgentExecutor, create_openai_functions_agent
-from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.prompts import PromptTemplate
 from fastapi.responses import StreamingResponse
-from concurrent.futures import ThreadPoolExecutor
-from langchain.chains import RetrievalQA
-from ..RAG.file_loader import PDFLoader
+from ..RAG.file_loader import DocumentLoader
 from ..RAG.setup_spilitter import TextSplitter
 from ..RAG.vectorstore import VectorDB
 from ..RAG.setup_retriever import Retriever
 import asyncio
-from typing import List
-import functools
-import logging
 
 class RAGAgent():
     def __init__(self, llm, embedding):
         self.llm = llm
         self.embedding = embedding
-        self.pdf_loader = PDFLoader()
+        self.document_loader = DocumentLoader()
         self.splitter_class = TextSplitter()
         self.vectorstore = None
         self.retriever_class = Retriever()
@@ -28,12 +20,13 @@ class RAGAgent():
         self.build_ensemble_retriever()
 
     def process_documents(self):
-        documents = self.pdf_loader.load_docs()
-        docs = self.splitter_class.splitter_documents(documents=documents)
+        # documents = self.pdf_loader.load_pdf_docs()
+        documents = self.document_loader.load_markdown_docs()
+        docs = self.splitter_class.split_documents(documents=documents)
         self.vectorstore = VectorDB(docs=docs,
                                           embedding=self.embedding
                                         ).get_vectorstore()
-        self.retriever = self.retriever_class.build_retriever(docs=docs, k=4)
+        self.retriever = self.retriever_class.build_retriever(docs=docs, k=3)
 
     def build_ensemble_retriever(self):
         self.ensemble_retriever = self.retriever_class.get_ensemble_retriever(vectorstore=self.vectorstore, retriever=self.retriever)
@@ -64,14 +57,23 @@ class RAGAgent():
                         await asyncio.sleep(0.002)
 
         async def generate_response():
-
+            '''Retrieval'''
             docs = self.ensemble_retriever.invoke(query)  
+            # In thông tin chi tiết về từng document
+            print("\n=== Retrieved Documents ===")
+            for i, doc in enumerate(docs, 1):
+                print(f"\nDocument {i}:")
+                print(f"Content: {doc.page_content}")
+                print(f"Metadata: {doc.metadata}")
+            print("=" * 50)
 
+            '''Context'''
             context = "\n".join([doc.page_content for doc in docs])
             max_context_length = 10000  
             if len(context) > max_context_length:
                 context = context[:max_context_length]
-        
+
+            '''Prompt'''
             prompt = self.custom_prompt.format(context=context, question=query)
 
             async for token in stream_answer(self.llm, prompt):

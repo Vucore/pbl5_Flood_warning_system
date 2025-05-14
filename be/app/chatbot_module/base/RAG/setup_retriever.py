@@ -12,7 +12,7 @@ class Retriever():
     
     def get_ensemble_retriever(self,
                       search_type:str = "similarity",
-                      search_kwargs: dict = {"k": 10},
+                      search_kwargs: dict = {"k": 4},
                       vectorstore = None,
                       retriever = None
                     ):

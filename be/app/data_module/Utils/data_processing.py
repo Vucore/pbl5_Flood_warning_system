@@ -7,13 +7,19 @@ def clean_and_validate_data(data: SensorData):
     Làm sạch và kiểm tra dữ liệu sensor trước khi lưu vào database.
     """
     try:
-        # Chuyển đổi dữ liệu sang kiểu số
-        data.rainfall = float(data.rainfall)
-        data.soil_humidity = float(data.soil_humidity)
-        data.air_humidity = float(data.air_humidity)
-        data.air_pressure = float(data.air_pressure)
-        data.temperature = float(data.temperature)
-        data.water_level = float(data.water_level)
+        try:
+            data = SensorData(
+                timestamp=data.timestamp,
+                rainfall=float(str(data.rainfall).strip()),
+                soil_humidity=float(str(data.soil_humidity).strip()),
+                air_humidity=float(str(data.air_humidity).strip()),
+                air_pressure=float(str(data.air_pressure).strip()),
+                temperature=float(str(data.temperature).strip()),
+                water_level=float(str(data.water_level).strip())
+            )
+        except ValueError as e:
+            print(f"Type conversion error: {e}")
+            return None
 
         #đảo ngược 2 giá trị
         # Kiểm tra giá trị hợp lệ (ví dụ: nhiệt độ không thể < 0 hoặc > 100)
@@ -35,43 +41,28 @@ def clean_and_validate_data(data: SensorData):
         if not (0 <= data.rainfall <= 1024):
             raise ValueError("Rain fall out of range")
         
-        data.rainfall = invert_sensor_value(data.rainfall)
-        data.soil_humidity = invert_sensor_value(data.soil_humidity)
-
-        data.rainfall = classify_rainfall(data.rainfall)
-        data.soil_humidity = classify_soil_humidity(data.soil_humidity)
-
+        data.rainfall = float(convert_rain_to_mm_per_hour(sensor_value=data.rainfall))
         return data  
     except ValueError as e:
         print(f"Data validation error: {e}")
         return None  # Trả về None nếu dữ liệu không hợp lệ
-    
-def invert_sensor_value(value, max_value=1024):
-    """Đảo ngược giá trị cảm biến trong phạm vi [0, max_value]."""
-    return max_value - value
 
-def classify_rainfall(rainfall: float) -> str:
-    """
-    Phân loại lượng mưa dựa vào giá trị mm.
-    """
-    if rainfall <= 0:
-        return "Không có mưa"
-    elif rainfall <= 400:
-        return "Mưa nhỏ"
-    elif rainfall <= 700:
-        return "Mưa vừa"
-    elif rainfall <= 900:
-        return "Mưa to"
-    else:
-        return "Mưa rất to"
 
-def classify_soil_humidity(soil_humidity:float) -> str:
-    if soil_humidity >= 700:
-        return "Ẩm"
-    elif soil_humidity >= 301:
-        return "Bình thường"
-    else:
-        return "Khô"
+def convert_rain_to_mm_per_hour(sensor_value, min_value=440, max_value=630, max_rain_rate=20):
+    try:
+        # Ensure all values are float
+        sensor_value = float(str(sensor_value).strip())
+        min_value = float(min_value)
+        max_value = float(max_value)
+        max_rain_rate = float(max_rain_rate)
+        
+        # Calculate with validated float values
+        rate = ((max_value - sensor_value) / (max_value - min_value)) * max_rain_rate
+        # Ensure return value is float
+        return 0.0 if rate < 0 else float(rate)
+    except (ValueError, TypeError) as e:
+        print(f"Rain conversion error: {e}")
+        return 0.0
     
 def convert_to_json(data: SensorData):
     """

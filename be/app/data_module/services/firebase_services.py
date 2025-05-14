@@ -1,6 +1,8 @@
 from ..database.SensorData import SensorData
 from firebase_admin import db
 from ..database.SensorData import SensorData
+from fastapi import HTTPException
+import time
 
 async def get_latest_sensor_data_from_firebase() -> SensorData | None:
     ref = db.reference("sensor_data")
@@ -24,8 +26,46 @@ async def get_latest_sensor_data_from_firebase() -> SensorData | None:
         print(f"[Firebase Parse Error] {e}")
         return None
 
+def update_state_sensor_in_firebase(sensor_name: str, state: bool):
+    try:
+        # Lấy reference đến Firebase
+        ref = db.reference('/control_state')
+        
+        # Kiểm tra sensor name hợp lệ
+        valid_sensors = ['rain', 'soil_humd', 'temp', 'water_level', 'air_humd', 'air_pres']
+        if sensor_name not in valid_sensors:
+            raise ValueError(f"Tên sensor không hợp lệ. Chọn một trong: {valid_sensors}")
+            
+        # Cập nhật chỉ một sensor và timestamp
+        ref.update({
+            sensor_name: state,
+            'timestamp': int(time.time())
+        })
+        
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Lỗi cập nhật sensor: {str(e)}")
+
+    return "success"
 
 
+
+# def send_control(control: ControlState):
+#     try:
+#         # Lấy reference đến Firebase Realtime Database
+#         ref = db.reference(control_data_path)
+        
+#         # Gửi dữ liệu lên Firebase
+#         ref.set({
+#             'rain_sensor': control.rain_sensor,
+#             'soil_humd': control.soil_humd,
+#             'bme280': control.bme280,
+#             'sieu_am': control.sieu_am,
+#             'timestamp': int(time.time()),
+#         })
+
+    
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=f"Error sending data to Firebase: {str(e)}")
 
 
 

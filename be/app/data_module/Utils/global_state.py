@@ -6,16 +6,14 @@ MAX_HISTORY_SIZE = 288
 
 class GlobalState:
     sensor_data_history = []
-    current_warning_level = "normal"  # "normal", "watch", "warning", "severe"
-    current_language = "vi"
 
     @classmethod
     def save_global_data_sensor(cls, data: SensorData):
         if data is None:
             return
 
-        data.rainfall = str(data.rainfall)
-        data.soil_humidity = str(data.soil_humidity)
+        data.rainfall = float(data.rainfall)
+        data.soil_humidity = float(data.soil_humidity)
         data.air_humidity = float(data.air_humidity)
         data.air_pressure = float(data.air_pressure)
         data.temperature = float(data.temperature)
@@ -45,9 +43,7 @@ class GlobalState:
                 "air_humidity": 0,
                 "air_pressure": 0,
                 "temperature": 0,
-                "water_level": 0,
-                "warning_level": "No Data",
-                "language": cls.current_language
+                "water_level": 0
             }
 
         latest_data = cls.sensor_data_history[-1]
@@ -65,6 +61,4 @@ class GlobalState:
             "air_pressure": latest_data.air_pressure,
             "temperature": latest_data.temperature,
             "water_level": latest_data.water_level,
-            "warning_level": cls.current_warning_level,
-            "language": cls.current_language
         }

@@ -1,0 +1,93 @@
+[
+  {
+    "tag": "greeting",
+    "patterns": [
+      "Chào bạn",
+      "Xin chào",
+      "Chào bạn có khỏe không?",
+      "Chào, có ai ở đây không?"
+    ],
+    "responses": [
+      "Xin chào! Tôi là trợ lý cảnh báo lũ lụt. Bạn cần giúp đỡ gì hôm nay?",
+      "Chào bạn! Tôi có thể giúp gì cho bạn về nguy cơ lũ lụt?",
+      "Xin chào! Tôi có thể cung cấp thông tin về lũ lụt và cảnh báo sớm cho bạn.",
+      "Chào bạn! Tôi có thể cung cấp dữ liệu về lũ lụt, cảnh báo và an toàn cho bạn."
+    ]
+  },
+  {
+    "tag": "flood_info",
+    "patterns": [
+      "Lũ lụt là gì?",
+      "Lũ lụt xảy ra như thế nào?",
+      "Khi nào lũ lụt xảy ra?",
+      "Nguyên nhân của lũ lụt là gì?"
+    ],
+    "responses": [
+      "Lũ lụt xảy ra khi nước dâng cao và tràn vào đất liền, có thể do mưa lớn, vỡ đập, hoặc nước dâng từ các con sông.",
+      "Lũ lụt là hiện tượng khi nước sông dâng cao và tràn vào khu vực xung quanh. Điều này thường xảy ra sau những cơn mưa lớn kéo dài hoặc khi đập vỡ.",
+      "Lũ lụt có thể xảy ra do mưa lớn, tan băng, vỡ đập, hoặc nước biển dâng cao, gây ngập úng diện rộng."
+    ]
+  },
+  {
+    "tag": "warning_levels",
+    "patterns": [
+      "Có bao nhiêu cấp cảnh báo lũ lụt?",
+      "Cảnh báo lũ lụt có mấy cấp?",
+      "Các cấp độ cảnh báo lũ lụt là gì?",
+      "Lũ lụt có mấy mức cảnh báo?",
+      "Mức cảnh báo lũ lụt bao gồm những cấp độ nào?"
+    ],
+    "responses": [
+      "Hệ thống cảnh báo lũ lụt của chúng tôi có bốn cấp độ: Bình thường, Theo dõi, Cảnh báo, và Nghiêm trọng.",
+      "Có bốn cấp độ cảnh báo lũ lụt: Bình thường, Theo dõi, Cảnh báo, và Nghiêm trọng. Mỗi cấp độ yêu cầu mức độ chuẩn bị và hành động khác nhau.",
+      "Cảnh báo lũ lụt của chúng tôi có bốn cấp độ: Bình thường (Xanh lá), Theo dõi (Vàng), Cảnh báo (Cam), và Nghiêm trọng (Đỏ).",
+      "Bốn cấp độ cảnh báo của chúng tôi là: Bình thường, Theo dõi, Cảnh báo, và Nghiêm trọng, với các hành động cần thực hiện tùy vào mức độ nguy cơ."
+    ]
+  },
+  {
+    "tag": "safety_tips",
+    "patterns": [
+      "Làm sao để bảo vệ bản thân trong lũ lụt?",
+      "Khi xảy ra lũ lụt, tôi nên làm gì?",
+      "Các bước cần làm trong trường hợp lũ lụt?",
+      "Cách nào để đảm bảo an toàn khi lũ lụt?",
+      "Khi có lũ lụt, tôi cần chuẩn bị gì?"
+    ],
+    "responses": [
+      "Để bảo vệ bản thân trong lũ lụt, hãy di chuyển đến vùng đất cao và tránh xa các khu vực ngập lụt.",
+      "Khi xảy ra lũ lụt, bạn nên di chuyển đến nơi cao ráo, tránh đi bộ hoặc lái xe qua vùng nước lũ và chuẩn bị bộ dụng cụ khẩn cấp.",
+      "Trong trường hợp lũ lụt, bạn cần theo dõi thông tin cảnh báo, di chuyển đến nơi an toàn, và tránh các khu vực dễ bị ngập lụt.",
+      "Khi có lũ lụt, bạn nên chuẩn bị sẵn sàng vật dụng khẩn cấp, đảm bảo các tài liệu quan trọng được bảo vệ, và tuân thủ chỉ thị sơ tán nếu cần."
+    ]
+  },
+  {
+    "tag": "flood_impact",
+    "patterns": [
+      "Lũ lụt có thể gây thiệt hại gì?",
+      "Lũ lụt ảnh hưởng đến môi trường như thế nào?",
+      "Lũ lụt có ảnh hưởng đến các công trình không?",
+      "Lũ lụt gây ra những tác hại nào?",
+      "Lũ lụt có thể gây ra những hậu quả nghiêm trọng nào?"
+    ],
+    "responses": [
+      "Lũ lụt có thể gây thiệt hại nghiêm trọng cho tài sản và tính mạng, làm gián đoạn giao thông và gây ra mất an toàn cho cộng đồng.",
+      "Lũ lụt có thể gây thiệt hại lớn cho tài sản, công trình, và gây nguy hiểm cho tính mạng con người. Nó cũng có thể ảnh hưởng đến môi trường sống và sinh kế của người dân.",
+      "Lũ lụt có thể làm hư hỏng cơ sở hạ tầng, ảnh hưởng đến nguồn cung cấp nước và thực phẩm, đồng thời tạo ra những mối nguy hiểm về sức khỏe do nước ô nhiễm.",
+      "Lũ lụt không chỉ gây thiệt hại tài sản mà còn có thể làm thay đổi môi trường sống, phá hủy hệ sinh thái và ảnh hưởng đến sản xuất nông nghiệp.",
+      "Lũ lụt gây ngập úng các khu vực thấp, làm gián đoạn giao thông và có thể dẫn đến thiệt hại lớn về tài sản, đặc biệt là nhà cửa và các công trình công cộng."
+    ]
+  },
+  {
+    "tag": "sensor_data",
+    "patterns": [
+      "Mực nước hiện tại là bao nhiêu?",
+      "Nhiệt độ hiện tại là bao nhiêu?",
+      "Độ ẩm hiện tại là bao nhiêu?",
+      "Dữ liệu cảm biến hiện tại thế nào?",
+      "Cho tôi biết thông tin cảm biến hiện tại"
+    ],
+    "responses": [
+      "Tôi sẽ kiểm tra dữ liệu cảm biến cho bạn ngay bây giờ."
+    ]
+  }
+]

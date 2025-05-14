@@ -1,5 +1,5 @@
 from sklearn.linear_model import LogisticRegression
-from ..Utils.utils import preprocess_text
+from ..NLP.preprocess_text import preprocess_text
 
 class Classifier:
     def __init__(self, embedding):
@@ -39,8 +39,9 @@ class Classifier:
                 self.ml_context.fit(patterns_embeddings, tags)
 
     def classify_predict_tag(self, user_input: str, mode: int, threshold: float = 0.4) -> str:
+        print(user_input)
         processed_input = preprocess_text(user_input)
-
+        print(processed_input)
         embedding_input = self.embedding.embed_query(processed_input)
 
         if 1 == mode:
@@ -48,6 +49,7 @@ class Classifier:
 
             # In xác suất của từng tag
             classes = self.ml_question.classes_
+            print("**) Predict:")
             for tag, prob in zip(classes, probabilities):
                 print(f"{tag}: {prob:.4f}")
 

@@ -8,6 +8,4 @@ def handle_User_Signup(username: str, email: str, phone: str, address: str):
     return result
 
 
-
-
   

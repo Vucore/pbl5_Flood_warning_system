@@ -104,14 +104,15 @@
 
 
 
-from fastapi import APIRouter, WebSocket, WebSocketDisconnect, FastAPI
+from fastapi import APIRouter, WebSocket, WebSocketDisconnect, FastAPI, HTTPException
 import firebase_admin
+from pydantic import BaseModel
 import asyncio
 from ..Utils import data_processing
-from ..services import sensor_services
+from ..services import firebase_services
 from ..database.SensorData import SensorData
 from ..Utils.global_state import GlobalState
-from firebase_admin import credentials
+from firebase_admin import credentials, db
 from contextlib import asynccontextmanager
 import os
 from dotenv import load_dotenv
@@ -169,21 +170,6 @@ async def lifespan(app: FastAPI):
 
     print("🛑 App shutdown")
 
-# @asynccontextmanager
-# async def lifespan(app: FastAPI):
-#     # Gọi khi app khởi động
-#     if not firebase_admin._apps:
-#         cred = credentials.Certificate("pbl5-microbit-firebase-adminsdk-fbsvc-e304393036.json")
-#         firebase_admin.initialize_app(cred, {
-#             'databaseURL': 'https://pbl5-microbit-default-rtdb.firebaseio.com/'
-#         })
-#         print("✅ Firebase initialized")
-
-#     yield  
-
-#     # Gọi khi app shutdown (nếu cần)
-#     print("🛑 App shutdown")
-
 router = APIRouter(lifespan=lifespan)
 
 @router.websocket("/ws")
@@ -196,7 +182,7 @@ async def websocket_endpoint(websocket: WebSocket):
         async def fetch_and_broadcast_from_firebase():
             # last_timestamp = None
             while True:
-                sensor_data = await sensor_services.get_latest_sensor_data_from_firebase()
+                sensor_data = await firebase_services.get_latest_sensor_data_from_firebase()
                 # print(f"[Firebase Data] Received: {sensor_data.__dict__ if sensor_data else None}")
                 if not sensor_data:
                     await asyncio.sleep(5)
@@ -207,6 +193,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
                 sensor_data_standardized = data_processing.clean_and_validate_data(sensor_data)
                 # print(f"[Data Processing] Standardized: {sensor_data_standardized.__dict__ if sensor_data_standardized else None}")
+
                 if sensor_data_standardized:
                     GlobalState.save_global_data_sensor(sensor_data_standardized)
                     await manager.broadcast(sensor_data_standardized)
