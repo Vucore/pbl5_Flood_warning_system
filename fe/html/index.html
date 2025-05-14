@@ -5,9 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flood Monitoring System</title>
-    <!-- <script src="https://kit.fontawesome.com/a076d05399.js" cross>origin="anonymous"</script> -->
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,0,0" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../css/style_base.css">
     <link rel="stylesheet" href="../css/style_chatbot.css">
@@ -16,16 +14,48 @@
     <script src="../js/script_toggle.js"></script>
 </head>
 
+<script>
+    const isLoggedIn = localStorage.getItem('loggedIn');
+    const isGuestIn = localStorage.getItem('guestIn');
+    // Kiểm tra và xóa guest mode khi đăng nhập
+    if (!isLoggedIn && !isGuestIn) {
+        window.location.replace('login.html');
+    }
+    window.addEventListener('beforeunload', function() {
+        localStorage.removeItem('loggedIn');
+        localStorage.removeItem('guestIn');
+    });
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const userEmailElement = document.getElementById('userEmail');
+        if (isLoggedIn) {
+            document.body.classList.remove('guest-mode');
+            userEmailElement.textContent = "Người dùng";
+        }
+        if (isGuestIn) {
+            document.body.classList.add('guest-mode');
+            userEmailElement.textContent = "Khách";
+        }
+    })
+      function logout() {
+        localStorage.removeItem('loggedIn');
+        localStorage.removeItem('guestIn');
+        window.location.replace('login.html');
+    }
+</script>
 <body>
     <header>
         <div class="header-left">
             <i class="fas fa-bars"></i> Flood Monitoring System
         </div>
         <div class="header-right">
-            <span><button id="openModalBtn"><i class="fas fa-user-plus" style="color: #42bc75"></i> Đăng
-                    ký</button></span>
+            <span><button onclick="logout()" class="header-btn"><i class="fas fa-sign-in-alt" style="color: #4287f5"></i> Đăng xuất</button></span>
             <span><button>❓ Contact</button></span>
             <span><button disabled>🌍 Vietnamese</button></span>
+            <span class="user-info">
+                <i class="fas fa-user" style="color: #f59642"></i>
+                <span id="userEmail">Khách</span>
+            </span>
         </div>
     </header>
     <div class="warning" id="warning">
@@ -262,29 +292,6 @@
         </div>
     </div>
 
-    <!-- Modal đăng ký -->
-    <div id="registerModal" class="modal">
-        <div class="modal-content">
-            <span class="close-button" id="closeModalBtn">&times;</span>
-            <h2>Đăng ký thành viên</h2>
-            <form id="registerForm">
-                <label for="username">Họ và Tên</label>
-                <input type="text" id="username" name="username" required>
-
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" required>
-
-                <label for="phone">Số điện thoại</label>
-                <input type="tel" id="phone" name="phone" required>
-
-                <label for="address">Địa chỉ</label>
-                <input type="address" id="address" name="address">
-
-                <button type="submit" id="register-btn">Đăng ký</button>
-            </form>
-        </div>
-    </div>
-
     <footer>
         <div class="footer-content">
             <div class="footer-columns">
@@ -340,7 +347,6 @@
     <script type="module" src="../js/script_sensor_data.js"></script>
     <script type="module" src="../js/script_chart.js"></script>
     <script src="../js/script_chatbot.js"></script>
-    <script src="../js/script_func.js"></script>
 </body>
 
 </html>

@@ -19,7 +19,6 @@ const initialInputHeight = messageInput ? messageInput.scrollHeight : 0;
 ragButton.addEventListener('click', () => {
     ragButton.classList.toggle('active');
     isRagOn = ragButton.classList.contains('active');
-    // console.log("RAG mode:", isRagOn ? "ON" : "OFF");
   });
 
 const createMessageElement = (content, ...classes) => {
@@ -28,69 +27,6 @@ const createMessageElement = (content, ...classes) => {
     div.innerHTML = content;
     return div;
 };
-// application/
-// const generateBotResponse = async (incomingMessageDiv) => {
-//     try {
-//         // Get the current language
-//         // const language = document.documentElement.lang || 'vi';
-//         const language = 'vi';
-        
-//         // Send the message to the server
-//         const response = await fetch('http://localhost:8000/api/chat', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json',
-//             },
-//             body: JSON.stringify({
-//                 message: userData.message,
-//                 language: language
-//             }),
-//         });
-//         // console.log(response);
-//         // Kiểm tra phản hồi có rỗng không
-//         if (!response.ok) {
-//             throw new Error(`Server error: ${response.status} ${response.statusText}`);
-//         }
-
-//         // Kiểm tra phản hồi có nội dung trước khi gọi .json()
-//         const text = await response.text();
-//         if (!text) {
-//             throw new Error("Empty response from server.");
-//         }
-
-//         const data = JSON.parse(text);
-//         // console.log("data" ,data);
-//         // const data = await response.json();
-//         // Handle the response
-//         if (response.ok) {
-//             // Replace the thinking indicator with the actual response
-//             const botResponse = (String)(data.response);
-//             incomingMessageDiv.classList.remove("thinking");
-//             incomingMessageDiv.querySelector(".message-text").innerHTML = botResponse.replace(/\n/g, '<br>');
-            
-//             // Add to chat history
-//             chatHistory.push({
-//                 sender: "user",
-//                 message: userData.message
-//             });
-//             chatHistory.push({
-//                 sender: "bot",
-//                 message: botResponse
-//             });
-//         } else {
-//             // Handle error
-//             incomingMessageDiv.classList.remove("thinking");
-//             incomingMessageDiv.querySelector(".message-text").innerHTML = data.response || "Sorry, an error occurred.";
-//         }
-//     } catch (error) {
-//         console.error("Error communicating with the server:", error);
-//         incomingMessageDiv.classList.remove("thinking");
-//         incomingMessageDiv.querySelector(".message-text").innerHTML = "Sorry, I couldn't connect to the server. Please try again later.";
-//     }
-    
-//     // Scroll to the bottom of the chat
-//     chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
-// };
 
 const generateBotResponse = async (incomingMessageDiv) => {
     try {
