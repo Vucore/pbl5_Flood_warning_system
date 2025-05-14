@@ -4,6 +4,7 @@ body {
     margin: 0;
     padding: 0;
 }
+
 header {
     background: #fff;
     padding: 10px 30px;
@@ -12,15 +13,18 @@ header {
     align-items: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 .header-left {
     display: flex;
     align-items: center;
     font-size: 20px;
     font-weight: bold;
 }
+
 .header-left i {
     margin-right: 10px;
 }
+
 .header-right {
     display: flex;
     gap: 20px;
@@ -33,7 +37,8 @@ header {
 .header-right button {
     background: none;
     border: none;
-    padding: 8px 12px; /* Cho nút có khoảng cách trong */
+    padding: 8px 12px;
+    /* Cho nút có khoảng cách trong */
     margin: 0;
     color: inherit;
     font-size: 14px;
@@ -57,10 +62,14 @@ header {
     font-weight: bold;
     font-size: 20px;
 }
+
 main {
     padding: 20px;
 }
-.sensor-readings, .risk-prediction, .chart-readings {
+
+.sensor-readings,
+.risk-prediction,
+.chart-readings {
     /* background: #fff; */
     background: #f4f6fc;
     padding: 20px;
@@ -68,12 +77,14 @@ main {
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 .sensor-title {
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-weight: bold;
 }
+
 .live {
     color: green;
     font-size: 14px;
@@ -81,6 +92,7 @@ main {
     padding: 2px 6px;
     border-radius: 4px;
 }
+
 .grid-card-sensor {
     display: grid;
     grid-template-columns: repeat(3, minmax(250px, 1fr));
@@ -129,29 +141,36 @@ h3 {
     margin-bottom: 5px;
     margin-top: 5px;
 }
+
 .change {
     font-size: 14px;
     margin-top: 5px;
 }
+
 .change.up {
     color: green;
 }
+
 .change.down {
     color: red;
 }
+
 .change.risk {
     color: red;
     font-weight: 650;
 }
+
 .high-risk {
     font-size: 20px;
     color: #d9534f;
     font-weight: bold;
 }
+
 .actions ul {
     list-style: none;
     padding: 0;
 }
+
 .actions li {
     padding: 5px 0;
 }
@@ -161,8 +180,10 @@ h3 {
 
 /* Đổi màu nút dismiss */
 .warning button {
-    background-color: #f1c40f; /* Màu vàng nhẹ */
-    color: #fff;  /*Màu chữ trắng */
+    background-color: #f1c40f;
+    /* Màu vàng nhẹ */
+    color: #fff;
+    /*Màu chữ trắng */
     border: none;
     padding: 5px 10px;
     border-radius: 3px;
@@ -171,7 +192,8 @@ h3 {
 }
 
 .warning button:hover {
-    background-color: #d4ac0d; /* Đổi màu khi hover */
+    background-color: #d4ac0d;
+    /* Đổi màu khi hover */
 }
 
 
@@ -212,133 +234,197 @@ h3 {
     }
 }
 
-/* phần thắng thêm */ 
+/* phần thắng thêm */
 
 /* Định dạng tổng thể cho section */
 .risk-prediction {
-    background-color: #fff; /* Nền trắng */
-    border: 1px solid #e0e0e0; /* Viền mỏng màu xám nhạt */
-    border-radius: 8px; /* Bo tròn các góc */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
-    width: 100%; /* Chiều rộng tối đa */
-    margin: 0 auto; /* Căn giữa */
+    background-color: #fff;
+    /* Nền trắng */
+    border: 1px solid #e0e0e0;
+    /* Viền mỏng màu xám nhạt */
+    border-radius: 8px;
+    /* Bo tròn các góc */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Đổ bóng nhẹ */
+    width: 100%;
+    /* Chiều rộng tối đa */
+    margin: 0 auto;
+    /* Căn giữa */
 }
 
 /* Định dạng tiêu đề (risk-header) */
 .risk-header {
-    background-color: transparent; /* Bỏ màu tím nhạt, để trong suốt */
-    padding: 10px 15px; /* Khoảng cách bên trong */
-    display: flex; /* Sử dụng flexbox để căn chỉnh */
-    align-items: center; /* Căn giữa theo chiều dọc */
-    font-size: 16px; /* Kích thước chữ */
-    font-weight: bold; /* Chữ in đậm */
-    color: #333; /* Màu chữ */
+    background-color: transparent;
+    /* Bỏ màu tím nhạt, để trong suốt */
+    padding: 10px 15px;
+    /* Khoảng cách bên trong */
+    display: flex;
+    /* Sử dụng flexbox để căn chỉnh */
+    align-items: center;
+    /* Căn giữa theo chiều dọc */
+    font-size: 16px;
+    /* Kích thước chữ */
+    font-weight: bold;
+    /* Chữ in đậm */
+    color: #333;
+    /* Màu chữ */
 }
 
 .risk-header i {
-    margin-right: 8px; /* Khoảng cách giữa biểu tượng và chữ */
-    color: #666; /* Màu biểu tượng */
+    margin-right: 8px;
+    /* Khoảng cách giữa biểu tượng và chữ */
+    color: #666;
+    /* Màu biểu tượng */
 }
 
 /* Định dạng nội dung chính (risk-content) */
 .risk-content {
-    padding: 15px; /* Khoảng cách bên trong */
-    display: flex; /* Sử dụng flexbox để đặt risk-level và risk-analysis trên cùng một hàng */
-    gap: 15px; /* Khoảng cách giữa hai div */
+    padding: 15px;
+    /* Khoảng cách bên trong */
+    display: flex;
+    /* Sử dụng flexbox để đặt risk-level và risk-analysis trên cùng một hàng */
+    gap: 15px;
+    /* Khoảng cách giữa hai div */
 }
 
 /* Định dạng phần mức độ rủi ro (risk-level) */
 .risk-level {
-    flex: 2; /* Chiếm 2/3 chiều ngang */
-    display: flex; /* Sử dụng flexbox để xếp các phần tử theo cột */
-    flex-direction: column; /* Xếp theo cột */
-    gap: 10px; /* Khoảng cách giữa các phần tử bên trong */
+    flex: 2;
+    /* Chiếm 2/3 chiều ngang */
+    display: flex;
+    /* Sử dụng flexbox để xếp các phần tử theo cột */
+    flex-direction: column;
+    /* Xếp theo cột */
+    gap: 10px;
+    /* Khoảng cách giữa các phần tử bên trong */
 }
 
 .risk-label {
-    font-size: 18px; /* Kích thước chữ */
-    font-weight: bold; /* Chữ in đậm */
-    text-transform: uppercase; /* Chữ hoa */
-    color: #000; /* Màu đen */
+    font-size: 18px;
+    /* Kích thước chữ */
+    font-weight: bold;
+    /* Chữ in đậm */
+    text-transform: uppercase;
+    /* Chữ hoa */
+    color: #000;
+    /* Màu đen */
 }
 
 /* Định dạng thanh tiến trình (risk-progress) */
 .risk-progress {
-    background-color: #f0f0f0; /* Nền xám nhạt cho thanh tiến trình */
-    border-radius: 5px; /* Bo tròn góc */
-    height: 25px; /* Chiều cao thanh */
-    overflow: hidden; /* Ẩn phần thừa */
+    background-color: #f0f0f0;
+    /* Nền xám nhạt cho thanh tiến trình */
+    border-radius: 5px;
+    /* Bo tròn góc */
+    height: 25px;
+    /* Chiều cao thanh */
+    overflow: hidden;
+    /* Ẩn phần thừa */
 }
 
 .progress-bar {
-    background: linear-gradient(to right, #4a90e2, #8e44ad); /* Gradient từ xanh dương đến tím */
-    height: 100%; /* Chiều cao đầy đủ */
-    display: flex; /* Sử dụng flexbox để căn chỉnh số phần trăm */
-    align-items: center; /* Căn giữa theo chiều dọc */
-    justify-content: flex-end; /* Đẩy số phần trăm sang bên phải */
-    padding-right: 10px; /* Khoảng cách bên phải */
-    border-radius: 5px; /* Bo tròn góc */
-    transition: width 0.5s ease-in-out; /* Hiệu ứng chuyển động mượt mà */
+    background: linear-gradient(to right, #4a90e2, #8e44ad);
+    /* Gradient từ xanh dương đến tím */
+    height: 100%;
+    /* Chiều cao đầy đủ */
+    display: flex;
+    /* Sử dụng flexbox để căn chỉnh số phần trăm */
+    align-items: center;
+    /* Căn giữa theo chiều dọc */
+    justify-content: flex-end;
+    /* Đẩy số phần trăm sang bên phải */
+    padding-right: 10px;
+    /* Khoảng cách bên phải */
+    border-radius: 5px;
+    /* Bo tròn góc */
+    transition: width 0.5s ease-in-out;
+    /* Hiệu ứng chuyển động mượt mà */
 }
 
 .progress-bar span {
-    color: #fff; /* Màu chữ trắng */
-    font-size: 14px; /* Kích thước chữ */
-    font-weight: bold; /* Chữ in đậm */
+    color: #fff;
+    /* Màu chữ trắng */
+    font-size: 14px;
+    /* Kích thước chữ */
+    font-weight: bold;
+    /* Chữ in đậm */
 }
 
 /* Định dạng phần phân tích (analysis-text) */
 .analysis-text {
-    background-color: #f5f5f5; /* Nền xám nhạt */
-    padding: 10px; /* Khoảng cách bên trong */
-    border-radius: 5px; /* Bo tròn góc */
-    font-size: 14px; /* Kích thước chữ */
-    color: #666; /* Màu chữ xám */
+    background-color: #f5f5f5;
+    /* Nền xám nhạt */
+    padding: 10px;
+    /* Khoảng cách bên trong */
+    border-radius: 5px;
+    /* Bo tròn góc */
+    font-size: 14px;
+    /* Kích thước chữ */
+    color: #666;
+    /* Màu chữ xám */
 }
 
 /* Định dạng phần risk-analysis */
 .risk-analysis {
-    flex: 1; /* Chiếm 1/3 chiều ngang */
-    display: flex; /* Sử dụng flexbox để xếp các phần tử theo cột */
-    flex-direction: column; /* Xếp theo cột */
+    flex: 1;
+    /* Chiếm 1/3 chiều ngang */
+    display: flex;
+    /* Sử dụng flexbox để xếp các phần tử theo cột */
+    flex-direction: column;
+    /* Xếp theo cột */
 }
 
 /* Đảm bảo chiều cao của risk-level và risk-analysis bằng nhau */
 .risk-level,
 .risk-analysis {
-    min-height: 120px; /* Đặt chiều cao tối thiểu để cả hai div có chiều cao bằng nhau */
+    min-height: 120px;
+    /* Đặt chiều cao tối thiểu để cả hai div có chiều cao bằng nhau */
 }
 
 /* Định dạng phần hành động khuyến nghị (recommended-actions) */
 .recommended-actions h4 {
-    font-size: 16px; /* Kích thước chữ */
-    font-weight: bold; /* Chữ in đậm */
-    color: #000; /* Màu đen */
-    margin-bottom: 8px; /* Khoảng cách dưới */
+    font-size: 16px;
+    /* Kích thước chữ */
+    font-weight: bold;
+    /* Chữ in đậm */
+    color: #000;
+    /* Màu đen */
+    margin-bottom: 8px;
+    /* Khoảng cách dưới */
 }
 
 .recommended-actions ul {
-    list-style: none; /* Bỏ dấu đầu dòng mặc định */
-    padding: 0; /* Bỏ khoảng cách mặc định */
+    list-style: none;
+    /* Bỏ dấu đầu dòng mặc định */
+    padding: 0;
+    /* Bỏ khoảng cách mặc định */
 }
 
 .recommended-actions li {
-    display: flex; /* Sử dụng flexbox để căn chỉnh */
-    align-items: center; /* Căn giữa theo chiều dọc */
-    font-size: 14px; /* Kích thước chữ */
-    color: #333; /* Màu chữ */
-    margin-bottom: 5px; /* Khoảng cách giữa các mục */
+    display: flex;
+    /* Sử dụng flexbox để căn chỉnh */
+    align-items: center;
+    /* Căn giữa theo chiều dọc */
+    font-size: 14px;
+    /* Kích thước chữ */
+    color: #333;
+    /* Màu chữ */
+    margin-bottom: 5px;
+    /* Khoảng cách giữa các mục */
 }
 
 .recommended-actions li i {
-    margin-right: 8px; /* Khoảng cách giữa biểu tượng và chữ */
-    color: #666; /* Màu biểu tượng */
+    margin-right: 8px;
+    /* Khoảng cách giữa biểu tượng và chữ */
+    color: #666;
+    /* Màu biểu tượng */
 }
 
 
 /* Modal Styles */
 .modal {
-    display: none; /* Ẩn modal mặc định */
+    display: none;
+    /* Ẩn modal mặc định */
     position: fixed;
     z-index: 1000;
     left: 0;
@@ -346,7 +432,8 @@ h3 {
     width: 100%;
     height: 100%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 0.5); /* Nền mờ */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Nền mờ */
 }
 
 .modal-content {
@@ -410,4 +497,139 @@ h3 {
 
 .modal-content form button:hover {
     background-color: #357abd;
+}
+
+
+/* Footer styles */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+footer {
+    background-color: #FFFFFF;
+    border-top: 1px solid #E5E5E5;
+    padding: 3rem 0 1.5rem;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.footer-columns {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.footer-column h3 {
+    margin-bottom: 1rem;
+}
+
+.footer-column p,
+.footer-column a {
+    color: #525252;
+    font-size: 16px;
+}
+
+.footer-column ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid #E5E5E5;
+    color: #525252;
+    font-size: 16px;
+}
+
+/* Responsive adjustments for footer */
+@media (max-width: 1024px) {
+    .footer-columns {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 576px) {
+    .footer-columns {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+
+/* CheckBox */
+.checkBox {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button {
+    background-color: #d2d2d2;
+    width: 40px;  /* Reduced size to fit better */
+    height: 20px; /* Reduced size to fit better */
+    border-radius: 20px;
+    cursor: pointer;
+    position: relative;
+    transition: 0.3s;
+}
+
+/* Add these styles for the card positioning */
+.card {
+    position: relative;  /* Required for absolute positioning of checkbox */
+    padding: 20px;      /* Add some padding to prevent overlap */
+}
+
+/* Optional: Add styling for checked state */
+.button::before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    top: 1px;
+    left: 1px;
+    background-color: #fff;
+    transition: 0.3s;
+}
+
+input[type="checkbox"]:checked + .button {
+    background-color: #42bc75;
+}
+
+input[type="checkbox"]:checked + .button::before {
+    transform: translateX(20px);
+}
+
+/* Hide the default checkbox */
+.checkBox input[type="checkbox"] {
+    display: none;
 }

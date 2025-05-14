@@ -254,7 +254,7 @@ let rainfallChart = new Chart(ctxRainfall, {
         scales: {
             y: {
                 min: 0,
-                max: 100,
+                max: 25,
                 ticks: {
                     stepSize: 10
                 },
@@ -339,12 +339,14 @@ function updateTemperatureChart(data) {
     sensorData.temperature.push(data.temperature);
     sensorData.airPressure.push(data.air_pressure);
     sensorData.airHumidity.push(data.air_humidity);
-    sensorData.rainfall.push(data.rainfall === "Mưa vừa" ? 50 :
-        data.rainfall === "Mưa to" ? 80 :
-            data.rainfall === "Mưa rất to" ? 100 : 30);
-    sensorData.soilHumidity.push(data.soil_humidity === "Ẩm" ? 80 :
-        data.soil_humidity === "Bình thường" ? 60 :
-            data.soil_humidity === "Khô" ? 30 : 50);
+    // sensorData.rainfall.push(data.rainfall === "Mưa vừa" ? 50 :
+    //     data.rainfall === "Mưa to" ? 80 :
+    //         data.rainfall === "Mưa rất to" ? 100 : 30);
+    // sensorData.soilHumidity.push(data.soil_humidity === "Ẩm" ? 80 :
+    //     data.soil_humidity === "Bình thường" ? 60 :
+    //         data.soil_humidity === "Khô" ? 30 : 50);
+    sensorData.rainfall.push(data.rainfall);
+    sensorData.soilHumidity.push(data.soil_humidity);
     sensorData.waterLevel.push(data.water_level);
 
     // Thêm nhãn thời gian cho tất cả các biểu đồ

@@ -22,7 +22,10 @@ let threSold = {
     tempChange: { value: 38, type: ">"},
     pressureChange: { value: 1000, type: "<"},
     humidityChange: { value: 85, type: ">"},
+    rainfallChange: {value: 5, type: ">"},
+    soilHumidityChange: {value: 75, type: ">"},
     waterLevelChange: { value: 10, type: ">"},
+
 }
 
 
@@ -32,22 +35,25 @@ function handleAndShowData(data) {
         currentTemp.textContent = data.temperature.toFixed(2) + " °C";
         currentAirPres.textContent = data.air_pressure.toFixed(2) + " hPa";
         currentAirHum.textContent = data.air_humidity.toFixed(2) + " %";
-        currentRainFall.textContent = data.rainfall;
-        currentSoilHum.textContent = data.soil_humidity;
+        currentRainFall.textContent = data.rainfall.toFixed(2) + " mm/h";
+        currentSoilHum.textContent = data.soil_humidity.toFixed(2) + " %";
         currentWaterLevel.textContent = data.water_level.toFixed(2) + " m";
-
+    
         // Cập nhật các thay đổi và cảnh báo
         updateChanges('tempChange', data.temperature, previousData.temperature);
         updateChanges('pressureChange', data.air_pressure, previousData.airPressure);
         updateChanges('humidityChange', data.air_humidity, previousData.airHumidity);
-        // updateChanges('rainfallChange', data.rainfall, previousData.rainfall);
-        // updateChanges('soilHumidityChange', data.soil_humidity, previousData.soilHumidity);
+        updateChanges('rainFallChange', data.rainfall, previousData.rainfall);
+        updateChanges('soilHumidityChange', data.soil_humidity, previousData.soilHumidity);
         updateChanges('waterLevelChange', data.water_level, previousData.waterLevel);
 
         checkThresold('tempChange', data.temperature, threSold.tempChange)
         checkThresold('pressureChange', data.air_pressure, threSold.pressureChange)
         checkThresold('humidityChange', data.air_humidity, threSold.humidityChange)
+        checkThresold('rainFallChange', data.rainfall, threSold.rainfallChange)
+        checkThresold('soilHumidityChange', data.soil_humidity, threSold.soilHumidityChange)
         checkThresold('waterLevelChange', data.water_level, threSold.waterLevelChange)
+
         // updateWarning(data.temperature, data.rainfall, data.water_level);
         // updateCharts(data.temperature, data.rainfall, data.water_level, data.air_humidity, data.soil_humidity);
 
@@ -67,79 +73,6 @@ function handleAndShowData(data) {
         console.error("Lỗi khi xử lý và hiển thị thông số:", error);
     }
 }
-// Hàm kết nối WebSocket
-// function connectWebSocket() {
-//     if (socket && socket.readyState === WebSocket.OPEN) {
-//         return;
-//     }
-
-//     // socket = new WebSocket('ws://localhost:8000/ws');
-//     socket = new WebSocket(`${API_WS}`);
-
-//     socket.addEventListener('open', function(event) {
-//         console.log("Connected to WebSocket server");
-//         isConnected = true;
-//     });
-
-//     socket.addEventListener('message', function(event) {
-//         if (event.data === "ping") {
-//             console.log("⚡ Nhận ping từ server, bỏ qua...");
-//             return;
-//         }
-//         try {
-//             const data = JSON.parse(event.data); // Chuyển đổi JSON thành object
-            
-            
-//             // Cập nhật dữ liệu cảm biến
-//             currentTemp.textContent = data.temperature.toFixed(2) + " °C";
-//             currentAirPres.textContent = data.air_pressure.toFixed(2) + " hPa";
-//             currentAirHum.textContent = data.air_humidity.toFixed(2) + " %";
-//             currentRainFall.textContent = data.rainfall;
-//             currentSoilHum.textContent = data.soil_humidity;
-//             currentWaterLevel.textContent = data.water_level.toFixed(2) + " m";
-
-//             // Cập nhật các thay đổi và cảnh báo
-//             updateChanges('tempChange', data.temperature, previousData.temperature);
-//             updateChanges('pressureChange', data.air_pressure, previousData.airPressure);
-//             updateChanges('humidityChange', data.air_humidity, previousData.airHumidity);
-//             // updateChanges('rainfallChange', data.rainfall, previousData.rainfall);
-//             // updateChanges('soilHumidityChange', data.soil_humidity, previousData.soilHumidity);
-//             updateChanges('waterLevelChange', data.water_level, previousData.waterLevel);
-
-//             checkThresold('tempChange', data.temperature, threSold.tempChange)
-//             checkThresold('pressureChange', data.air_pressure, threSold.pressureChange)
-//             checkThresold('humidityChange', data.air_humidity, threSold.humidityChange)
-//             checkThresold('waterLevelChange', data.water_level, threSold.waterLevelChange)
-//             // updateWarning(data.temperature, data.rainfall, data.water_level);
-//             // updateCharts(data.temperature, data.rainfall, data.water_level, data.air_humidity, data.soil_humidity);
-
-//             // Cập nhật giá trị trước đó
-//             previousData = {
-//                 temperature: data.temperature,
-//                 airPressure: data.air_pressure,
-//                 airHumidity: data.air_humidity,
-//                 rainfall: data.rainfall,
-//                 soilHumidity: data.soil_humidity,
-//                 waterLevel: data.water_level
-//             };
-            
-//             // console.log(previousData);
-
-//         } catch (error) {
-//             console.error("Error parsing JSON or updating values:", error);
-//         }
-//     });
-
-//     socket.addEventListener('close', function(event) {
-//         console.log("Connection closed. Reconnecting...");
-//         isConnected = false;
-//         setTimeout(connectWebSocket, 1000); // Tự động kết nối lại sau 1 giây
-//     });
-
-//     socket.addEventListener('error', function(event) {
-//         console.error("WebSocket error:", event);
-//     });
-// }
 
 // Hàm cập nhật sự thay đổi giữa giá trị mới và cũ
 function updateChanges(elementId, newValue, oldValue) {
@@ -149,11 +82,11 @@ function updateChanges(elementId, newValue, oldValue) {
 
     if (change > 0) {
         changeElement.style.fontWeight = "normal";
-        changeElement.textContent = `⬆ +${change.toFixed(2)} so với ngày hôm qua`;
+        changeElement.textContent = `⬆ +${change.toFixed(2)} so với lần đo trước`;
         changeElement.style.color = '#28a745'; // Màu xanh cho thay đổi tích cực
     } else if (change < 0) {
         changeElement.style.fontWeight = "normal";
-        changeElement.textContent = `⬇ ${change.toFixed(2)} so với ngày hôm qua`;
+        changeElement.textContent = `⬇ ${change.toFixed(2)} so với lần đo trước`;
         changeElement.style.color = '#dc3545'; // Màu đỏ cho thay đổi tiêu cực
     } else {
         changeElement.style.fontWeight = "normal";
