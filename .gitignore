@@ -17,8 +17,7 @@ chroma_db/
 .env
 !.env.example
 
-# JSON files (ignore all, except *.example.json)
-*.json
+# JSON files (except *.example.json)
 !*.example.json
 
 # Firebase admin SDK key (in specific path)
