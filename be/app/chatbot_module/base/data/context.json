@@ -88,6 +88,7 @@
   {
     "tag": "call",
     "patterns": [
+      "Thông báo đến mọi người",
       "Gửi cảnh báo tới người dân",
       "Gửi email thông báo ngập lụt",
       "Tôi muốn báo lũ",

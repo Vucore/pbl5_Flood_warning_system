@@ -1,6 +1,6 @@
 # Thông tin về Bo mạch và Cảm biến cho Hệ thống Cảnh báo Sớm Lũ Lụt
 
-## 0. Các vi mạch, phần cứng, thiết bị được sử dụng trong dự án
+## 0. Các vi mạch, phần cứng, thiết bị, cảm biến được sử dụng trong dự án
 - Micro:bit
 - ESP8266
 - Cảm biến độ ẩm đất

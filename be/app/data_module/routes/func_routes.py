@@ -14,6 +14,9 @@ class RegisterRequest(BaseModel):
     phone: str
     address: Optional[str] = None
 
+class LoginRequest(BaseModel):
+    email: str
+
 class SensorToggleRequest(BaseModel):
     sensorId: str
     isTurned: bool
@@ -26,13 +29,22 @@ async def regis_endpoint(request: RegisterRequest):
         phone = request.phone
         address = request.address
 
-        response = func_services.handle_User_Signup(username, email, phone, address)
+        response = await func_services.handle_user_signup(username, email, phone, address)
         return response
     
     except Exception as e:
         logging.error(f"Server error: {e}")
         return "An error occurred on the server."
 
+@router.post("/login")
+async def login_endpoint(request: LoginRequest):
+    try:
+        email = request.email
+        response = func_services.handle_login(email)
+        return response
+    except Exception as e:
+        logging.error(f"Server error: {e}")
+        return "An error occurred on the server."    
 
 @router.post("/sensor/toggle")
 async def toggle_sensor(request: SensorToggleRequest):

@@ -26,8 +26,14 @@ class UserService:
         """)
         self.conn.commit()
 
-    def handle_user_signup(self, username: str, email: str, phone: str, address: str):
+    async def handle_user_signup(self, username: str, email: str, phone: str, address: str):
         try:
+            if self.check_user_exists(email=email):
+                return {
+                "success": False,
+                "message": "Email đã được đăng ký",
+            }
+
             self.cursor.execute("""
                 INSERT INTO users (username, email, phone, address)
                 VALUES (?, ?, ?, ?)
@@ -44,6 +50,25 @@ class UserService:
             return {
                 "success": False,
                 "message": "Đăng ký thất bại",
+                "error": str(e)
+            }
+    def check_user_exists(self, email: str):
+        try:
+            self.cursor.execute("""
+                SELECT COUNT(*) FROM users WHERE email = ?
+            """, (email,))
+            
+            count = self.cursor.fetchone()[0]
+            if count > 0:
+                return True
+            else:
+                return False
+
+        except Exception as e:
+            print("Lỗi khi kiểm tra email:", e)
+            return {
+                "success": False,
+                "message": "Không thể kiểm tra email",
                 "error": str(e)
             }
         
