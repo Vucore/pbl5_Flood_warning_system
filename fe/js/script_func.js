@@ -1,113 +1,72 @@
-const openModalBtn = document.getElementById("openModalBtn");
-const closeModalBtn = document.getElementById("closeModalBtn");
-const registerModal = document.getElementById("registerModal");
-
-const username = document.getElementById("username");
-const email = document.getElementById("email");
-const phone = document.getElementById("phone");
-const address = document.getElementById("address");
-
-const registerButton = document.getElementById("register_btn");
-
-document.addEventListener('DOMContentLoaded', function() {
-	const warningText = document.getElementById("warning");
-	const warningButton = document.getElementById("hide-warning");
-
-	if (warningButton) {
-		warningButton.addEventListener("click", function() {
-			if (warningText) {
-				warningText.style.display = "none";
-			}
-		});
-	}
+// Gán sự kiện cho nút dismiss sau khi DOM đã tải xong
+document.addEventListener('DOMContentLoaded', function () {
+    const dismissButton = document.getElementById('hide-Warning');
+    dismissButton.addEventListener('click', function(event) {
+        hideWarning(event);
+    });
 });
 
-async function sendRegisterData(data) {
-	try {
-		const response = await fetch(`${API_REGISTER}`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify(data)
-		});
+// Hàm cập nhật cảnh báo khi nhiệt độ, lượng mưa, mực nước vượt mức nguy hiểm
+function updateWarning(temperature, rainfall, waterLevel) {
+    let warningMessage = "";
+    let warningLevel = "none";
 
-		if (!response.ok) {
-			const errorData = await response.json();
-			throw new Error(errorData.message || "Đăng ký thất bại.");
-		}
+    if (temperature > 30) {
+        warningMessage = "⚠️ Cảnh báo: Nhiệt độ cao, vượt quá 30°C!";
+        warningLevel = "high";
+    } else if (rainfall > 50) {
+        warningMessage = "⚠️ Cảnh báo: Lượng mưa cao, nguy cơ lũ lụt!";
+        warningLevel = "medium";
+    } else if (waterLevel > 100) {
+        warningMessage = "⚠️ Cảnh báo: Mực nước rất cao!";
+        warningLevel = "high";
+    }
 
-		const result = await response.json();
-		return result;
+    const warningElement = document.getElementById('warning');
+    const warningText = warningElement.querySelector('div');
 
-	} catch (error) {
-		console.error("Lỗi gửi đăng ký:", error);
-		throw error;
-	}
+    if (warningMessage) {
+        warningElement.style.display = 'flex';
+        warningText.textContent = warningMessage;
+        warningElement.classList.add(warningLevel); // Thêm lớp cảnh báo tùy theo mức độ
+    } else {
+        warningElement.style.display = 'none';
+    }
+}
+
+// Hàm ẩn cảnh báo khi nhấn nút "Dismiss"
+function hideWarning(event) {
+    // Ngừng hành động mặc định của sự kiện (ngừng việc di chuyển đến liên kết nếu có)
+    if (event) {
+        event.preventDefault();
+    }
+    document.getElementById('warning').style.display = 'none';
 }
 
 
-document.addEventListener("DOMContentLoaded", () => {
 
-	// Hiển thị modal khi nhấn nút "Đăng ký"
-	openModalBtn.addEventListener("click", () => {
-		registerModal.style.display = "block";
-	});
+async function logout() {
+    const email = sessionStorage.getItem("userEmail");
 
-	// Đóng modal khi nhấn nút "X"
-	closeModalBtn.addEventListener("click", () => {
-		registerModal.style.display = "none";
-	});
-
-	// Đóng modal khi nhấn ra ngoài modal
-	window.addEventListener("click", (event) => {
-		if (event.target === registerModal) {
-			registerModal.style.display = "none";
-		}
-	});
-
-	// Xử lý sự kiện gửi form
-	const registerForm = document.getElementById("registerForm");
-	registerForm.addEventListener("submit", async (event) => {
-		event.preventDefault(); // Ngăn hành vi mặc định của form
-	
-		// Lấy dữ liệu từ các trường
-		const nameVal = username.value.trim();
-		const emailVal = email.value.trim();
-		const phoneVal = phone.value.trim();
-		const addressVal = address.value.trim();
-	
-		// Kiểm tra dữ liệu
-		if (!nameVal || !emailVal || !phoneVal) {
-			alert("Vui lòng điền đầy đủ thông tin.");
-			return;
-		}
-	
-		const formData = {
-			username: nameVal,
-			email: emailVal,
-			phone: phoneVal,
-			address: addressVal
-		};
-	
-		try {
-			const result = await sendRegisterData(formData);
-			console.log(result)
-			if (result)
-			{
-				alert("✅ Đăng ký thành công!");
-				registerForm.reset();
-				registerModal.style.display = "none";
-			}
-			else {
-				alert("❌ Đăng ký thất bại. Vui lòng thử lại sau.");
-				username.value = "";
-				email.value = "";
-				phone.value = "";
-				address.value = "";
-			}
-		} catch (err) {
-			alert("❌ Đăng ký thất bại. Vui lòng thử lại sau.");
-		}
-	});
-}) 
+    if (email) {
+        try {
+            await fetch(`${API_LOGIN_STATE}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: email,
+                    isGuest: false,
+                    isOnline: false,
+                    lastLogin: Date.now()
+                })
+            });
+        } catch (err) {
+            console.error("Lỗi cập nhật isOnline:", err);
+        }
+    }
+    sessionStorage.removeItem("loggedIn")
+    sessionStorage.removeItem("guestIn")
+    window.location.replace('login.html');
+}

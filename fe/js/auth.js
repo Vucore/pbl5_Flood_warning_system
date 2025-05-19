@@ -25,8 +25,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 const result = await sendLoginRequest(email);
 
                 if (result['success']) {
-                    
-                    localStorage.setItem('loggedIn', 'true');
+                    const userData = {
+                        email: email,
+                        isGuest: false,           
+                        isOnline: true,
+                        lastLogin: Date.now()
+                    };
+
+                    sessionStorage.setItem('loggedIn', true);
+                    sessionStorage.setItem('userEmail', email);
+                    await fetch(`${API_LOGIN_STATE}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(userData)
+                    });
                     document.getElementById('loginEmail').value = '';
                     loginForm.querySelectorAll('input, button').forEach(el => el.disabled = true);
                     showMessage('success', 'Đăng nhập thành công! Đang chuyển hướng...');
@@ -54,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
             guestAccessBtn.classList.add('btn-loading');
             guestAccessBtn.innerHTML = '<span>' + guestAccessBtn.textContent + '</span>';
 
-            localStorage.setItem('guestIn', 'guest');
+            sessionStorage.setItem('guestIn', true);
             document.querySelectorAll('button').forEach(btn => btn.disabled = true);
             showMessage('success', 'Đang truy cập với tư cách khách...');
 

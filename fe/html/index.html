@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flood Monitoring System</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,0,0" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="../css/style_base.css">
     <link rel="stylesheet" href="../css/style_chatbot.css">
@@ -15,18 +16,13 @@
 </head>
 
 <script>
-    const isLoggedIn = localStorage.getItem('loggedIn');
-    const isGuestIn = localStorage.getItem('guestIn');
-    // Kiểm tra và xóa guest mode khi đăng nhập
+    const isLoggedIn = sessionStorage.getItem('loggedIn');
+    const isGuestIn = sessionStorage.getItem('guestIn');
     if (!isLoggedIn && !isGuestIn) {
         window.location.replace('login.html');
     }
-    window.addEventListener('beforeunload', function() {
-        localStorage.removeItem('loggedIn');
-        localStorage.removeItem('guestIn');
-    });
-    
-    document.addEventListener('DOMContentLoaded', function() {
+
+    document.addEventListener('DOMContentLoaded', function () {
         const userEmailElement = document.getElementById('userEmail');
         if (isLoggedIn) {
             document.body.classList.remove('guest-mode');
@@ -35,21 +31,20 @@
         if (isGuestIn) {
             document.body.classList.add('guest-mode');
             userEmailElement.textContent = "Khách";
+            sessionStorage.removeItem("guestIn")
         }
     })
-      function logout() {
-        localStorage.removeItem('loggedIn');
-        localStorage.removeItem('guestIn');
-        window.location.replace('login.html');
-    }
+
 </script>
+
 <body>
     <header>
         <div class="header-left">
             <i class="fas fa-bars"></i> Flood Monitoring System
         </div>
         <div class="header-right">
-            <span><button onclick="logout()" class="header-btn"><i class="fas fa-sign-in-alt" style="color: #4287f5"></i> Đăng xuất</button></span>
+            <span><button onclick="logout()" class="header-btn"><i class="fas fa-sign-in-alt"
+                        style="color: #4287f5"></i> Đăng xuất</button></span>
             <span><button>❓ Contact</button></span>
             <span><button disabled>🌍 Vietnamese</button></span>
             <span class="user-info">
@@ -213,7 +208,7 @@
         </section>
 
 
-        <!-- Thêm section mới vào trước thẻ đóng </main> -->
+        <!-- Predict -->
         <section class="risk-prediction">
             <div class="risk-header">
                 <i class="fas fa-chart-line"></i>
@@ -221,20 +216,20 @@
             </div>
             <div class="risk-content">
                 <div class="risk-level">
-                    <div class="risk-label">HIGH RISK</div>
+                    <div class="risk-label">AN TOÀN</div>
                     <div class="risk-progress">
-                        <div class="progress-bar" style="width: 75%;">
-                            <span>75%</span>
+                        <div class="progress-bar" style="width: 0%;">
+                            <span>0%</span>
                         </div>
                     </div>
-                    <div class="analysis-text">Flood Prediction Analysis:</div>
+                    <div class="analysis-text">Flood Prediction Analysis: <span class="risk-analysis-text"></span></div>
                 </div>
                 <div class="risk-analysis">
                     <div class="recommended-actions">
                         <h4>▲ Recommended Actions</h4>
-                        <ul>
-                            <li><i class="fas fa-arrow-up"></i> Move valuables to higher floors</li>
-                            <li><i class="fas fa-first-aid"></i> Prepare emergency kit</li>
+                        <ul class="risk-actions-list">
+                            <!-- Các khuyến nghị sẽ được cập nhật động theo mức rủi ro -->
+                            <li><i class="fas fa-check"></i> No action needed</li>
                         </ul>
                     </div>
                 </div>
@@ -283,7 +278,7 @@
                 <div class="chat-mode">
                     <button type="button" id="toggle-rag" class="rag-button">
                         <span class="rag-icon"></span>
-                        RAG</button>
+                        LLM</button>
                 </div>
                 <div class="chat-controls">
                     <button type="submit" id="send-message" class="material-symbols-rounded">arrow_upward</button>
@@ -340,9 +335,8 @@
             </div>
         </div>
     </footer>
-
-
     <script src="../js/config.js"></script>
+    <script src="../js/script_func.js"></script>
     <script type="module" src="../js/socket.js"></script>
     <script type="module" src="../js/script_sensor_data.js"></script>
     <script type="module" src="../js/script_chart.js"></script>

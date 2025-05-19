@@ -66,8 +66,14 @@ function handleAndShowData(data) {
             soilHumidity: data.soil_humidity,
             waterLevel: data.water_level
         };
-        
-        // console.log(previousData);
+        updateFloodRisk({
+            rainfall: data.rainfall,
+            water_level: data.water_level,
+            soil_humidity: data.soil_humidity,
+            air_humidity: data.air_humidity,
+            air_pressure: data.air_pressure,
+            temperature: data.temperature
+        });
 
     } catch (error) {
         console.error("Lỗi khi xử lý và hiển thị thông số:", error);
@@ -122,66 +128,41 @@ function checkThresold(elementId, newValue, threSold) {
     }
 }
 
-
-// Hàm cập nhật cảnh báo khi nhiệt độ, lượng mưa, mực nước vượt mức nguy hiểm
-function updateWarning(temperature, rainfall, waterLevel) {
-    let warningMessage = "";
-    let warningLevel = "none";
-
-    if (temperature > 30) {
-        warningMessage = "⚠️ Cảnh báo: Nhiệt độ cao, vượt quá 30°C!";
-        warningLevel = "high";
-    } else if (rainfall > 50) {
-        warningMessage = "⚠️ Cảnh báo: Lượng mưa cao, nguy cơ lũ lụt!";
-        warningLevel = "medium";
-    } else if (waterLevel > 100) {
-        warningMessage = "⚠️ Cảnh báo: Mực nước rất cao!";
-        warningLevel = "high";
-    }
-
-    const warningElement = document.getElementById('warning');
-    const warningText = warningElement.querySelector('div');
-
-    if (warningMessage) {
-        warningElement.style.display = 'flex';
-        warningText.textContent = warningMessage;
-        warningElement.classList.add(warningLevel); // Thêm lớp cảnh báo tùy theo mức độ
-    } else {
-        warningElement.style.display = 'none';
-    }
-}
-
-// Hàm ẩn cảnh báo khi nhấn nút "Dismiss"
-function hideWarning(event) {
-    // Ngừng hành động mặc định của sự kiện (ngừng việc di chuyển đến liên kết nếu có)
-    if (event) {
-        event.preventDefault();
-    }
-    document.getElementById('warning').style.display = 'none';
-}
-
-// Gán sự kiện cho nút dismiss sau khi DOM đã tải xong
-document.addEventListener('DOMContentLoaded', function () {
-    const dismissButton = document.getElementById('hide-Warning');
-    dismissButton.addEventListener('click', function(event) {
-        hideWarning(event);
-    });
-});
-
-
-// Khởi tạo kết nối WebSocket
-// connectWebSocket();
-
-// // Kiểm tra kết nối định kỳ nếu chưa kết nối
-// setInterval(function() {
-//     if (!isConnected) {
-//         console.log("Checking connection...");
-//         connectWebSocket();
-//     }
-// }, 5000);
 setInterval(() => {
     const data = getLatestData();
     if (data) {
         handleAndShowData(data)
     }
 }, 5000);
+
+
+async function updateFloodRisk(sensorData) {
+    const response = await fetch(`${API_PREDICT_RISK}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(sensorData)
+    });
+    if (!response.ok) {
+        console.error("Lỗi khi gọi API:", response.status, response.statusText);
+        return;
+    }
+    const data = await response.json();
+    // data: { risk_score, label, class_idx }
+
+    // Cập nhật nhãn rủi ro
+    document.querySelector('.risk-label').textContent = data.label.toUpperCase();
+
+    // Hiển thị phần trăm rủi ro dựa trên risk_score (giá trị 0-1)
+    const percent = Math.round(data.risk_score * 100);
+
+    // Cập nhật progress bar
+    document.querySelector('.progress-bar').style.width = percent + "%";
+    document.querySelector('.progress-bar span').textContent = percent + "%";
+
+    // Đổi màu progress bar theo mức độ
+    const progressBar = document.querySelector('.progress-bar');
+    progressBar.style.background = "#42bc75"; // mặc định an toàn
+    if (data.class_idx === 1) progressBar.style.background = "#ffc107"; // chú ý
+    if (data.class_idx === 2) progressBar.style.background = "#fd7e14"; // nguy hiểm
+    if (data.class_idx === 3) progressBar.style.background = "#dc3545"; // khẩn cấp
+}
