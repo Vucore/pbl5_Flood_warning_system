@@ -14,7 +14,11 @@ class EmailAgent:
             user_name = user["username"]
             email = user["email"]
             address = user["address"]
-            email_content = generate_email_tool.invoke({"username": user_name, "address": address, "date" : date_time}).content
+            email_content = generate_email_tool.invoke(
+                {"username": user_name, 
+                 "address": address, 
+                 "date" : date_time
+                 }).content
             recipient = email
             if not recipient:
                 return f"Email đã được tạo nhưng không tìm thấy địa chỉ email người nhận:\n\n{email_content}\n\nVui lòng cung cấp địa chỉ email để gửi."

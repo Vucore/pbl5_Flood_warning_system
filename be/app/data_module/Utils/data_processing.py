@@ -29,7 +29,7 @@ def clean_and_validate_data(data: SensorData):
         if not (0 <= data.air_humidity <= 100):
             raise ValueError("Air humidity out of range")
 
-        if not (0 <= data.soil_humidity <= 1024):
+        if not (0 <= data.soil_humidity <= 100):
             raise ValueError("Soil humidity out of range")
 
         if not (800 <= data.air_pressure <= 1100):
@@ -48,7 +48,9 @@ def clean_and_validate_data(data: SensorData):
         return None  # Trả về None nếu dữ liệu không hợp lệ
 
 
-def convert_rain_to_mm_per_hour(sensor_value, min_value=440, max_value=630, max_rain_rate=20):
+def convert_rain_to_mm_per_hour(sensor_value, min_value=650, max_value=1000, max_rain_rate=20):
+    if sensor_value == 0:
+        return 0
     try:
         # Ensure all values are float
         sensor_value = float(str(sensor_value).strip())

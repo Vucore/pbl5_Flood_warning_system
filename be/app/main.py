@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from .chatbot_module.routes import chatbot_routes
 from .data_module.routes import websocket, func_routes
+from .floodrisk_module.routes import flood_risk_routes
 from fastapi.middleware.cors import CORSMiddleware
 import logging
 
@@ -17,4 +18,5 @@ app.add_middleware(
 # Đăng ký router đúng cách
 app.include_router(chatbot_routes.router, prefix="/api")
 app.include_router(func_routes.router, prefix="/api")
+app.include_router(flood_risk_routes.router, prefix="/api")
 app.include_router(websocket.router)

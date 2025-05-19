@@ -47,8 +47,46 @@ def update_state_sensor_in_firebase(sensor_name: str, state: bool):
 
     return "success"
 
+def get_sensor_status():
+    try:
+        ref = db.reference('/control_state')
+        data = ref.get()
+        
+        if not data:
+            return []
+
+        # Chuyển đổi dữ liệu thành dạng list các sensor
+        sensor_list = []
+        for sensor_id, is_turned in data.items():
+            if sensor_id == "timestamp":
+                continue
+            sensor_list.append({
+                "sensorId": sensor_id,
+                "isTurned": is_turned
+            })
+
+        return sensor_list
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Lỗi lấy trạng thái sensor: {str(e)}")
 
 
+def update_user_status(email : str, isGuest: bool, isOnline: bool, lastLogin: int):
+    try:
+        user_id = email.split("@")[0]
+        ref = db.reference(f'/users/{user_id}')
+        
+        # Cập nhật dữ liệu
+        ref.update({
+            "email": email,
+            "isGuest": isGuest,
+            "isOnline": isOnline,
+            "lastLogin": lastLogin
+        })
+
+        return {"success": True}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 # def send_control(control: ControlState):
 #     try:
 #         # Lấy reference đến Firebase Realtime Database
