@@ -85,4 +85,15 @@ async def save_user_state(status: UserStatus):
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
+
+class AdminAuthRequest(BaseModel):
+    password: str
+
+@router.post("/admin/auth")
+async def admin_auth(request: AdminAuthRequest):
+    try:
+        password = request.password
+        result = func_services.admin_auth(password)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

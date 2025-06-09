@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flood Monitoring System</title>
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../css/style_base.css">
+    <link rel="stylesheet" href="../css/style_chatbot.css">
+    <link rel="stylesheet" href="../css/style_chart.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- <script src="../js/script_toggle.js"></script> -->
+</head>
+
+<script>
+    const isLoggedIn = sessionStorage.getItem('loggedIn');
+    const isGuestIn = sessionStorage.getItem('guestIn');
+    if (!isLoggedIn && !isGuestIn) {
+        window.location.replace('login.html');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const userEmailElement = document.getElementById('userEmail');
+        if (isLoggedIn) {
+            document.body.classList.remove('guest-mode');
+            userEmailElement.textContent = "Người dùng";
+        }
+        if (isGuestIn) {
+            document.body.classList.add('guest-mode');
+            userEmailElement.textContent = "Khách";
+            sessionStorage.removeItem("guestIn")
+        }
+    })
+
+</script>
+
+<body>
+    <header>
+        <div class="header-left">
+            <i class="fas fa-bars"></i> Flood Monitoring System
+        </div>
+        <div class="header-right">
+            <span><button onclick="logout()" class="header-btn"><i class="fas fa-sign-in-alt"
+                        style="color: #4287f5"></i> Đăng xuất</button></span>
+            <span><button>❓ Contact</button></span>
+            <span><button disabled>🌍 Vietnamese</button></span>
+            <span class="user-info">
+                <i class="fas fa-user" style="color: #f59642"></i>
+                <span id="userEmail">Khách</span>
+            </span>
+        </div>
+    </header>
+    <div class="warning" id="warning">
+        ⚠️ <strong>Warning:</strong> High rainfall detected. Potential flooding risk in the next 24 hours.
+        <button id="hide-Warning" onclick="hideWarning()">Dismiss</button>
+    </div>
+
+    <main>
+        <!-- sensor data -->
+        <section class="sensor-readings">
+            <div class="sensor-title">Current Sensor Readings <span class="live">Live</span></div>
+            <div class="grid-card-sensor">
+                <div class="card">
+                    <div>
+                        <h3>Temperature</h3>
+                        <div class="value">
+                            <span id="temperature">28.5°C</span>
+                        </div>
+                        <!-- <div class="checkBox">
+                            <input type="checkbox" id="temp" class=" sensor-toggle">
+                            <label for="temp" class="button"></label>
+                        </div> -->
+                        <small id="tempChange" class="change-text"></small>
+                        <!-- Dòng thông tin thay đổi nằm dưới -->
+                    </div>
+                    <i class="fas fa-thermometer-half"></i>
+                </div>
+                <div class="card">
+                    <div>
+                        <h3>Air Pressure</h3>
+                        <div class="value">
+                            <span id="airPressure">1012.5 hPa</span>
+                        </div>
+                        <!-- <div class="checkBox">
+                            <input type="checkbox" id="air_pres" class=" sensor-toggle">
+                            <label for="air_pres" class="button"></label>
+                        </div> -->
+                        <small id="pressureChange" class="change-text"></small>
+                        <!-- Dòng thông tin thay đổi -->
+                    </div>
+                    <i class="fas fa-wind"></i>
+                </div>
+                <div class="card">
+                    <div>
+                        <h3>Air Humidity</h3>
+                        <div class="value">
+                            <span id="airHumidity">80%</span>
+                        </div>
+                        <!-- <div class="checkBox">
+                            <input type="checkbox" id="air_humd" class=" sensor-toggle">
+                            <label for="air_humd" class="button"></label>
+                        </div> -->
+                        <small id="humidityChange" class="change-text"></small>
+                    </div>
+                    <i class="fas fa-water"></i>
+                </div>
+                <div class="card alert">
+                    <div>
+                        <h3>Rainfall</h3>
+                        <div class="value">
+                            <span id="rainfall">37.8mm/h</span>
+                        </div>
+                        <!-- <div class="checkBox">
+                            <input type="checkbox" id="rain" class=" sensor-toggle">
+                             <label for="rain" class="button"></label> 
+                        </div> -->
+                        <!-- <p id="change" class="change risk">🚨 Abnormally high for the season</p> -->
+                        <small id="rainFallChange" class="change-text"></small>
+                    </div>
+                    <i class="fas fa-cloud-showers-heavy"></i>
+                </div>
+                <div class="card">
+                    <div>
+                        <h3>Soil Humidity</h3>
+                        <div class="value">
+                            <span id="soilHumidity">87.5%</span>
+                        </div>
+                        <!-- <div class="checkBox">
+                            <input type="checkbox" id="soil_humd" class=" sensor-toggle">
+                            <label for="soil_humd" class="button"></label>
+                        </div> -->
+                        <small id="soilHumidityChange" class="change-text"></small>
+                    </div>
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <div class="card">
+                    <div>
+                        <h3>Water Level</h3>
+                        <div class="value">
+                            <span id="waterLevel">10 cm</span>
+                        </div>
+                        <!-- <div class="checkBox">
+                            <input type="checkbox" id="water_level" class=" sensor-toggle">
+                            <label for="water_level" class="button"></label>
+                        </div> -->
+                        <small id="waterLevelChange" class="change-text"></small>
+                    </div>
+                    <i class="fas fa-water"></i>
+                </div>
+            </div>
+        </section>
+
+
+
+
+        <!-- chart -->
+        <section class="chart-readings">
+            <div class="sensor-title">Current Chart <span class="live">Live</span></div>
+            <div class="chart-buttons">
+                <button class="chart-btn active" data-chart="temperature">Temperature</button>
+                <button class="chart-btn" data-chart="air-pressure">Air Pressure</button>
+                <button class="chart-btn" data-chart="air-humidity">Air Humidity</button>
+                <button class="chart-btn" data-chart="rainfall">Rainfall</button>
+                <button class="chart-btn" data-chart="soil-humidity">Soil Humidity</button>
+                <button class="chart-btn" data-chart="water-level">Water Level</button>
+            </div>
+            <div class="grid-chart">
+                <div class="card-chart active" data-chart="temperature">
+                    <h3>Temperature Chart</h3>
+                    <div class="chart-container">
+                        <canvas id="temperatureChart"></canvas>
+                    </div>
+                </div>
+                <div class="card-chart" data-chart="air-pressure">
+                    <h3>Air Pressure Chart</h3>
+                    <div class="chart-container">
+                        <canvas id="airPressureChart"></canvas>
+                    </div>
+                </div>
+                <div class="card-chart" data-chart="air-humidity">
+                    <h3>Air Humidity Chart</h3>
+                    <div class="chart-container">
+                        <canvas id="airHumidityChart"></canvas>
+                    </div>
+                </div>
+                <div class="card-chart" data-chart="rainfall">
+                    <h3>Rainfall Chart</h3>
+                    <div class="chart-container">
+                        <canvas id="rainfallChart"></canvas>
+                    </div>
+                </div>
+                <div class="card-chart" data-chart="soil-humidity">
+                    <h3>Soil Humidity Chart</h3>
+                    <div class="chart-container">
+                        <canvas id="soilHumidityChart"></canvas>
+                    </div>
+                </div>
+                <div class="card-chart" data-chart="water-level">
+                    <h3>Water Level Chart</h3>
+                    <div class="chart-container">
+                        <canvas id="waterLevelChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Predict -->
+        <section class="risk-prediction">
+            <div class="risk-header">
+                <i class="fas fa-chart-line"></i>
+                <span>Flood Risk Prediction</span>
+            </div>
+            <div class="risk-content">
+                <div class="risk-level">
+                    <!-- Mức rủi ro sẽ được cập nhật động -->
+                    <div class="risk-label" id="risk-label">BÌNH THƯỜNG</div>
+                    <div class="analysis-text">Flood Prediction Analysis: <span id="risk-analysis-text">Không có nguy cơ lũ lụt.</span></div>
+                </div>
+                <div class="risk-analysis">
+                    <div class="recommended-actions">
+                        <h4>▲ Recommended Actions</h4>
+                        <ul class="risk-actions-list" id="risk-actions-list">
+                            <!-- Các khuyến nghị sẽ được cập nhật động theo mức rủi ro -->
+                            <li><i class="fas fa-check"></i> No action needed</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+
+    <!-- Chatbot -->
+    <button id="chatbot-toggler">
+        <span class="material-symbols-rounded">mode_comment</span>
+        <span class="material-symbols-rounded">close</span>
+    </button>
+
+    <div class="chatbot-popup">
+        <div class="chat-header">
+            <div class="header-info">
+                <svg class="chatbot-logo" xmlns="http://www.w3.org/2000/svg" width="50" height="50"
+                    viewBox="0 0 1024 1024">
+                    <path
+                        d="M738.3 287.6H285.7c-59 0-106.8 47.8-106.8 106.8v303.1c0 59 47.8 106.8 106.8 106.8h81.5v111.1c0 .7.8 1.1 1.4.7l166.9-110.6 41.8-.8h117.4l43.6-.4c59 0 106.8-47.8 106.8-106.8V394.5c0-59-47.8-106.9-106.8-106.9zM351.7 448.2c0-29.5 23.9-53.5 53.5-53.5s53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5-53.5-23.9-53.5-53.5zm157.9 267.1c-67.8 0-123.8-47.5-132.3-109h264.6c-8.6 61.5-64.5 109-132.3 109zm110-213.7c-29.5 0-53.5-23.9-53.5-53.5s23.9-53.5 53.5-53.5 53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5zM867.2 644.5V453.1h26.5c19.4 0 35.1 15.7 35.1 35.1v121.1c0 19.4-15.7 35.1-35.1 35.1h-26.5zM95.2 609.4V488.2c0-19.4 15.7-35.1 35.1-35.1h26.5v191.3h-26.5c-19.4 0-35.1-15.7-35.1-35.1zM561.5 149.6c0 23.4-15.6 43.3-36.9 49.7v44.9h-30v-44.9c-21.4-6.5-36.9-26.3-36.9-49.7 0-28.6 23.3-51.9 51.9-51.9s51.9 23.3 51.9 51.9z">
+                    </path>
+                </svg>
+                <h2 class="logo-text">ChatBot</h2>
+            </div>
+            <button id="close-chatbot" class="material-symbols-rounded">keyboard_arrow_down</button>
+        </div>
+
+        <div class="chat-body">
+            <div class="message bot-message">
+                <svg class="bot-avatar" xmlns="http://www.w3.org/2000/svg" width="50" height="50"
+                    viewBox="0 0 1024 1024">
+                    <path
+                        d="M738.3 287.6H285.7c-59 0-106.8 47.8-106.8 106.8v303.1c0 59 47.8 106.8 106.8 106.8h81.5v111.1c0 .7.8 1.1 1.4.7l166.9-110.6 41.8-.8h117.4l43.6-.4c59 0 106.8-47.8 106.8-106.8V394.5c0-59-47.8-106.9-106.8-106.9zM351.7 448.2c0-29.5 23.9-53.5 53.5-53.5s53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5-53.5-23.9-53.5-53.5zm157.9 267.1c-67.8 0-123.8-47.5-132.3-109h264.6c-8.6 61.5-64.5 109-132.3 109zm110-213.7c-29.5 0-53.5-23.9-53.5-53.5s23.9-53.5 53.5-53.5 53.5 23.9 53.5 53.5-23.9 53.5-53.5 53.5zM867.2 644.5V453.1h26.5c19.4 0 35.1 15.7 35.1 35.1v121.1c0 19.4-15.7 35.1-35.1 35.1h-26.5zM95.2 609.4V488.2c0-19.4 15.7-35.1 35.1-35.1h26.5v191.3h-26.5c-19.4 0-35.1-15.7-35.1-35.1zM561.5 149.6c0 23.4-15.6 43.3-36.9 49.7v44.9h-30v-44.9c-21.4-6.5-36.9-26.3-36.9-49.7 0-28.6 23.3-51.9 51.9-51.9s51.9 23.3 51.9 51.9z">
+                    </path>
+                </svg>
+                <div class="message-text">
+                    👋 Xin chào! Tôi là trợ lý ảo của hệ thống cảnh báo lũ lụt sớm. Tôi có thể giúp
+                    gì cho bạn?</div>
+            </div>
+        </div>
+        <div class="chat-footer">
+            <form action="#" class="chat-form">
+                <textarea placeholder="Nhập câu hỏi của bạn..." class="message-input" required></textarea>
+                <div class="chat-mode">
+                    <button type="button" id="toggle-rag" class="rag-button">
+                        <span class="rag-icon"></span>
+                        LLM</button>
+                </div>
+                <div class="chat-controls">
+                    <button type="submit" id="send-message" class="material-symbols-rounded">arrow_upward</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-columns">
+                <div class="footer-column">
+                    <h3>FloodAlert IoT</h3>
+                    <p>Smart flood warning solutions to protect communities and the environment.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">IoT Devices</a></li>
+                        <li><a href="#">Monitored Areas</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Connect With Us</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link">
+                            <img src="assets/facebook-icon.svg" alt="Facebook">
+                        </a>
+                        <a href="#" class="social-link">
+                            <img src="assets/twitter-icon.svg" alt="Twitter">
+                        </a>
+                        <a href="#" class="social-link">
+                            <img src="assets/instagram-icon.svg" alt="Instagram">
+                        </a>
+                        <a href="#" class="social-link">
+                            <img src="assets/linkedin-icon.svg" alt="LinkedIn">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2025 FloodAlert IoT. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="../js/config.js"></script>
+    <script src="../js/script_func.js"></script>
+    <script type="module" src="../js/socket.js"></script>
+    <script type="module" src="../js/script_sensor_data.js"></script>
+    <script type="module" src="../js/script_chart.js"></script>
+    <script src="../js/script_chatbot.js"></script>
+</body>
+
+</html>

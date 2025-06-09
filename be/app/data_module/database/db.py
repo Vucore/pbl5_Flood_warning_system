@@ -12,9 +12,32 @@ class UserService:
             os.makedirs(os.path.dirname(abs_path), exist_ok=True)  # Tạo thư mục nếu chưa có
             self.conn = sqlite3.connect(db_path, check_same_thread=False)
             self.cursor = self.conn.cursor()
+        self.__create_table_admin()
+        self.__create_admin_account("admin123")
 
+    def __create_table_admin(self):
+        self.cursor.execute("""
+            CREATE TABLE IF NOT EXISTS admin (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                password TEXT NOT NULL
+            )
+        """)
+        self.conn.commit()
+    def __create_admin_account(self, password: str):
+        self.cursor.execute("""
+            INSERT INTO admin (password)
+            VALUES (?)
+        """, (password,))
+        self.conn.commit()
 
-    def create_table(self):
+    def get_admin_password(self):
+        self.cursor.execute("""
+            SELECT password FROM admin
+        """)
+        password = self.cursor.fetchone()[0]
+        return password
+
+    def create_table_users(self):
         self.cursor.execute("""
             CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,

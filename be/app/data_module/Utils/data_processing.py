@@ -32,40 +32,20 @@ def clean_and_validate_data(data: SensorData):
         if not (0 <= data.soil_humidity <= 100):
             raise ValueError("Soil humidity out of range")
 
-        if not (800 <= data.air_pressure <= 1100):
+        if not (800 <= data.air_pressure <= 1100 or data.air_pressure == 0):
             raise ValueError("Air pressure out of range")
         
         if not (0 <= data.water_level <= 100):
             raise ValueError("Water level out of range")
 
-        if not (0 <= data.rainfall <= 1024):
+        if not (0 <= data.rainfall <= 50):
             raise ValueError("Rain fall out of range")
         
-        data.rainfall = float(convert_rain_to_mm_per_hour(sensor_value=data.rainfall))
         return data  
     except ValueError as e:
         print(f"Data validation error: {e}")
         return None  # Trả về None nếu dữ liệu không hợp lệ
 
-
-def convert_rain_to_mm_per_hour(sensor_value, min_value=650, max_value=1000, max_rain_rate=20):
-    if sensor_value == 0:
-        return 0
-    try:
-        # Ensure all values are float
-        sensor_value = float(str(sensor_value).strip())
-        min_value = float(min_value)
-        max_value = float(max_value)
-        max_rain_rate = float(max_rain_rate)
-        
-        # Calculate with validated float values
-        rate = ((max_value - sensor_value) / (max_value - min_value)) * max_rain_rate
-        # Ensure return value is float
-        return 0.0 if rate < 0 else float(rate)
-    except (ValueError, TypeError) as e:
-        print(f"Rain conversion error: {e}")
-        return 0.0
-    
 def convert_to_json(data: SensorData):
     """
     Chuyển đổi đối tượng SensorData thành chuỗi JSON

@@ -64,7 +64,6 @@ def get_sensor_status():
                 "sensorId": sensor_id,
                 "isTurned": is_turned
             })
-
         return sensor_list
 
     except Exception as e:
