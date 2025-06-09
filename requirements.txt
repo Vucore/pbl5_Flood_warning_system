@@ -1,9 +1,12 @@
 fastapi
 numpy
+pandas
 pypdf
 faiss-cpu
 rank_bm25
 langchain-chroma
+py_vncorenlp
+pydantic-settings
 chromadb
 websockets
 firebase-admin

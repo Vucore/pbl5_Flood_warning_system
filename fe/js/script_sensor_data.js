@@ -68,7 +68,6 @@ function handleAndShowData(data) {
         };
         updateFloodRisk({
             rainfall: data.rainfall,
-            water_level: data.water_level,
             soil_humidity: data.soil_humidity,
             air_humidity: data.air_humidity,
             air_pressure: data.air_pressure,
@@ -135,34 +134,52 @@ setInterval(() => {
     }
 }, 5000);
 
-
 async function updateFloodRisk(sensorData) {
-    const response = await fetch(`${API_PREDICT_RISK}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(sensorData)
-    });
-    if (!response.ok) {
-        console.error("Lỗi khi gọi API:", response.status, response.statusText);
-        return;
+    try {
+        const response = await fetch(`${API_PREDICT_RISK}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(sensorData)
+        });
+
+        if (!response.ok) {
+            console.error("Lỗi khi gọi API:", response.status, response.statusText);
+            return;
+        }
+
+        const data = await response.json();
+
+        // Kiểm tra và xử lý dữ liệu trả về từ API
+        const { class_idx, label } = data;
+
+        // Cập nhật giao diện dựa trên kết quả phân loại
+        const riskLabel = document.getElementById("risk-label");
+        const riskAnalysisText = document.getElementById("risk-analysis-text");
+        const riskActionsList = document.getElementById("risk-actions-list");
+
+        if (class_idx === 0) {
+            riskLabel.textContent = "BÌNH THƯỜNG";
+            riskAnalysisText.textContent = "Không có nguy cơ lũ lụt.";
+            riskActionsList.innerHTML = `<li><i class="fas fa-check"></i> No action needed</li>`;
+        } else if (class_idx === 1) {
+            riskLabel.textContent = "CẢNH BÁO";
+            riskAnalysisText.textContent = "Có nguy cơ lũ lụt, cần theo dõi.";
+            riskActionsList.innerHTML = `
+                <li><i class="fas fa-exclamation-triangle"></i> Theo dõi tình hình thời tiết.</li>
+                <li><i class="fas fa-box"></i> Chuẩn bị đồ dùng cần thiết.</li>
+            `;
+        } else if (class_idx === 2) {
+            riskLabel.textContent = "NGUY HIỂM";
+            riskAnalysisText.textContent = "Nguy cơ lũ lụt cao, cần hành động ngay.";
+            riskActionsList.innerHTML = `
+                <li><i class="fas fa-arrow-up"></i> Di chuyển đồ đạc lên tầng cao.</li>
+                <li><i class="fas fa-first-aid"></i> Chuẩn bị bộ dụng cụ khẩn cấp.</li>
+                <li><i class="fas fa-car"></i> Lên kế hoạch sơ tán.</li>
+            `;
+        } else {
+            console.warn("Không xác định được mức rủi ro:", class_idx);
+        }
+    } catch (error) {
+        console.error("Lỗi khi xử lý dữ liệu từ API:", error);
     }
-    const data = await response.json();
-    // data: { risk_score, label, class_idx }
-
-    // Cập nhật nhãn rủi ro
-    document.querySelector('.risk-label').textContent = data.label.toUpperCase();
-
-    // Hiển thị phần trăm rủi ro dựa trên risk_score (giá trị 0-1)
-    const percent = Math.round(data.risk_score * 100);
-
-    // Cập nhật progress bar
-    document.querySelector('.progress-bar').style.width = percent + "%";
-    document.querySelector('.progress-bar span').textContent = percent + "%";
-
-    // Đổi màu progress bar theo mức độ
-    const progressBar = document.querySelector('.progress-bar');
-    progressBar.style.background = "#42bc75"; // mặc định an toàn
-    if (data.class_idx === 1) progressBar.style.background = "#ffc107"; // chú ý
-    if (data.class_idx === 2) progressBar.style.background = "#fd7e14"; // nguy hiểm
-    if (data.class_idx === 3) progressBar.style.background = "#dc3545"; // khẩn cấp
 }

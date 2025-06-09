@@ -216,18 +216,14 @@
             </div>
             <div class="risk-content">
                 <div class="risk-level">
-                    <div class="risk-label">AN TOÀN</div>
-                    <div class="risk-progress">
-                        <div class="progress-bar" style="width: 0%;">
-                            <span>0%</span>
-                        </div>
-                    </div>
-                    <div class="analysis-text">Flood Prediction Analysis: <span class="risk-analysis-text"></span></div>
+                    <!-- Mức rủi ro sẽ được cập nhật động -->
+                    <div class="risk-label" id="risk-label">BÌNH THƯỜNG</div>
+                    <div class="analysis-text">Flood Prediction Analysis: <span id="risk-analysis-text">Không có nguy cơ lũ lụt.</span></div>
                 </div>
                 <div class="risk-analysis">
                     <div class="recommended-actions">
                         <h4>▲ Recommended Actions</h4>
-                        <ul class="risk-actions-list">
+                        <ul class="risk-actions-list" id="risk-actions-list">
                             <!-- Các khuyến nghị sẽ được cập nhật động theo mức rủi ro -->
                             <li><i class="fas fa-check"></i> No action needed</li>
                         </ul>

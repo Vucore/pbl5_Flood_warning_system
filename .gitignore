@@ -25,6 +25,7 @@ be/pbl5-microbit-firebase-adminsdk-*.json
 
 # Model directory
 models/
+*.pkl
 
 # IDE configs
 .vscode/
