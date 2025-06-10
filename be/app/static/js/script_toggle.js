@@ -132,6 +132,90 @@ document.addEventListener('DOMContentLoaded', async function () {
             alert('Không thể tải thông tin người dùng từ server.');
         }
     }
+    async function fetchChatHistory() {
+        try {
+            // console.log('Fetching chat history...');
+            const response = await fetch(`${API_CHAT_HISTORY}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            if (response.status === 404) {
+                console.warn('No chat history found');
+                const tbody = document.querySelector("#chat-history-table tbody");
+                if (tbody) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center">No chat history available</td></tr>';
+                }
+                return;
+            }
+
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status}`);
+            }
+
+            const csvText = await response.text();
+            // console.log('Received CSV text:', csvText.substring(0, 200) + '...'); // Log first 200 chars
+
+            if (!csvText.trim()) {
+                console.warn('Received empty CSV data');
+                return;
+            }
+
+            // Parse CSV using Papa Parse
+            Papa.parse(csvText, {
+                header: true,
+                skipEmptyLines: true,
+                transformHeader: header => header.toLowerCase().replace(/\s+/g, '_'),
+                complete: function (results) {
+                    // console.log('Parsed CSV data:', results.data);
+                    const tbody = document.querySelector("#chat-history-table tbody");
+                    if (!tbody) {
+                        console.error('Could not find chat history table body element');
+                        return;
+                    }
+
+                    tbody.innerHTML = ""; // Clear existing rows
+
+                    if (results.data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="6" class="text-center">No chat history available</td></tr>';
+                        return;
+                    }
+
+                    results.data.forEach((row, index) => {
+                        // console.log(`Processing row ${index}:`, row);
+                        const tr = document.createElement("tr");
+                        tr.innerHTML = `
+                            <td>${row.timestamp || ''}</td>
+                            <td>${row.question || ''}</td>
+                            <td>${row.answer || ''}</td>
+                            <td>${row.rag_used || ''}</td>
+                            <td>${row.rag_documents || ''}</td>
+                            <td>${row.response_type || ''}</td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                },
+                error: function (error) {
+                    console.error('Error parsing CSV:', error);
+                    const tbody = document.querySelector("#chat-history-table tbody");
+                    if (tbody) {
+                        tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error parsing chat history: ${error.message}</td></tr>`;
+                    }
+                }
+            });
+
+        } catch (error) {
+            console.error("Error fetching chat history:", error);
+            const tbody = document.querySelector("#chat-history-table tbody");
+            if (tbody) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error loading chat history: ${error.message}</td></tr>`;
+            }
+        }
+    }
+
     await initializeTogglesFromServer();
     await updateUserTable();
+    await fetchChatHistory();
 });

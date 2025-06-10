@@ -13,7 +13,9 @@ const API_CHART = `ws://${window.location.host}/ws`;
 
 const API_REGISTER = `${BASE_URL}/api/register`;
 const API_LOGIN = `${BASE_URL}/api/login`;
+
 const API_CHAT = `${BASE_URL}/api/chat`;
+const API_CHAT_HISTORY = `${BASE_URL}/api/chat-history`;
 
 const API_PREDICT_RISK = `${BASE_URL}/api/predict-flood-risk`;
 

@@ -209,3 +209,83 @@ def get_all_users_from_db(db_path: str):
             "message": "Không thể lấy danh sách người dùng",
             "error": str(e)
         }
+    
+class DataRain:
+    def __init__(self, db_path: Optional[str] = None):
+        self.conn = None
+        self.cursor = None
+
+        if db_path:
+            abs_path = os.path.abspath(db_path)
+            os.makedirs(os.path.dirname(abs_path), exist_ok=True)  # Tạo thư mục nếu chưa có
+            self.conn = sqlite3.connect(db_path, check_same_thread=False)
+            self.cursor = self.conn.cursor()
+    
+    def create_table_rain(self):
+        self.cursor.execute("""
+            CREATE TABLE IF NOT EXISTS rainfall_data (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                rainfall REAL NOT NULL,
+                timestamp DATETIME NOT NULL
+            )
+        """)
+        self.conn.commit()
+    
+    def insert_rainfall_data(self, rainfall: float, timestamp: str):
+        """
+        Hàm thêm dữ liệu lượng mưa vào bảng rainfall_data.
+        :param rainfall: Lượng mưa (đơn vị: mm).
+        :param timestamp: Thời gian (định dạng: YYYY-MM-DD HH:MM:SS).
+        """
+        try:
+            self.cursor.execute("""
+                INSERT INTO rainfall_data (rainfall, timestamp)
+                VALUES (?, ?)
+            """, (rainfall, timestamp))
+            self.conn.commit()
+            return {
+                "success": True,
+                "message": "Dữ liệu lượng mưa đã được thêm thành công."
+            }
+        except Exception as e:
+            print("Lỗi khi thêm dữ liệu lượng mưa:", e)
+            return {
+                "success": False,
+                "message": "Không thể thêm dữ liệu lượng mưa.",
+                "error": str(e)
+            }
+        
+    def get_rainfall_data_from_timestamp(self, timestamp: str):
+        """
+        Hàm lấy dữ liệu lượng mưa từ bảng rainfall_data từ thời điểm timestamp đến mới nhất.
+        :param timestamp: Thời gian bắt đầu (định dạng: YYYY-MM-DD HH:MM:SS).
+        :return: Danh sách dữ liệu lượng mưa từ timestamp đến mới nhất.
+        """
+        try:
+            self.cursor.execute("""
+                SELECT * FROM rainfall_data
+                WHERE timestamp >= ?
+                ORDER BY timestamp ASC
+            """, (timestamp,))
+            rainfall_data = self.cursor.fetchall()  # Lấy tất cả dữ liệu từ timestamp
+
+            # Chuyển đổi dữ liệu thành danh sách dictionary
+            data_list = []
+            for data in rainfall_data:
+                data_list.append({
+                    "id": data[0],
+                    "rainfall": data[1],
+                    "timestamp": data[2]
+                })
+
+            return {
+                "success": True,
+                "data": data_list
+            }
+        except Exception as e:
+            print("Lỗi khi truy vấn dữ liệu lượng mưa:", e)
+            return {
+                "success": False,
+                "message": "Không thể lấy dữ liệu lượng mưa.",
+                "error": str(e)
+            }

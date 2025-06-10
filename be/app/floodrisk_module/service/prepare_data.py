@@ -1,11 +1,39 @@
 from collections import deque
+from ...data_module.database.db import DataRain
+from datetime import datetime, timedelta
 
+# Khởi tạo danh sách lưu trữ 360 mẫu gần nhất
 rain_duration = 0
-MAX_HOURS = 268
+MAX_HOURS = 168
 SAMPLES_PER_HOUR = 60
-hourly_rainfall = deque(maxlen=MAX_HOURS)  # Lưu tổng lượng mưa của mỗi giờ, tối đa 268 giờ
+hourly_rainfall = deque(maxlen=MAX_HOURS)  # Lưu tổng lượng mưa của mỗi giờ, tối đa 168 giờ
 # Khởi tạo danh sách lưu dữ liệu lượng mưa trong giờ hiện tại
 current_hour_rainfall = deque(maxlen=SAMPLES_PER_HOUR)  # Lưu lượng mưa của giờ hiện tại
+last_hour = None
+dr = DataRain("storage/datarain.db")
+dr.create_table_rain()
+
+def init_hourly_rainfall():
+    """
+    Hàm khởi tạo danh sách hourly_rainfall từ database.
+    Lấy dữ liệu lượng mưa của 168 giờ gần nhất và chuyển đổi thành danh sách giá trị lượng mưa.
+    """
+    current_time = datetime.now()
+    start_time = current_time - timedelta(hours=168)
+    start_timestamp = start_time.strftime("%Y-%m-%d %H:%M:%S")
+
+    # Lấy dữ liệu từ database
+    result = dr.get_rainfall_data_from_timestamp(timestamp=start_timestamp)
+
+    if result["success"]:
+        # Chuyển đổi dữ liệu thành danh sách lượng mưa
+        rainfall_values = [data["rainfall"] for data in result["data"]]
+        return deque(rainfall_values, maxlen=MAX_HOURS)
+    else:
+        print("Lỗi khi khởi tạo hourly_rainfall:", result["message"])
+        return deque(maxlen=MAX_HOURS)  # Trả về danh sách rỗng nếu có lỗi
+
+hourly_rainfall = init_hourly_rainfall()
 
 def add_sensor_rainfall(rainfall):
     """
@@ -38,10 +66,15 @@ def shift_hour():
     hourly_rainfall.append(avg_rainfall)
     current_hour_rainfall.clear()
 
+
+    current_time = datetime.now()
+    timestamp = current_time.strftime("%Y-%m-%d %H:%M:%S")
+    dr.insert_rainfall_data(rainfall=avg_rainfall, timestamp=timestamp)
+
 def add_hourly_rainfall(rainfall):
     """
     Hàm thêm dữ liệu trung bình 1 giờ vào danh sách.
-    Nếu danh sách vượt quá 268 mẫu, mẫu cũ nhất sẽ tự động bị xóa.
+    Nếu danh sách vượt quá 168 mẫu, mẫu cũ nhất sẽ tự động bị xóa.
     """
     hourly_rainfall.append(rainfall)
 
@@ -63,15 +96,21 @@ def control_prepare_data_rainfall(rainfall):
     :param hours_to_get: Số giờ cần lấy dữ liệu lượng mưa (mặc định là 24 giờ).
     :return: Danh sách lượng mưa của các giờ gần nhất.
     """
-    global rain_duration
+    global rain_duration, last_hour
 
+    # Lấy giờ hiện tại
+    current_time = datetime.now()
+    current_hour = current_time.hour
+
+    # Kiểm tra nếu đã qua giờ mới
+    if last_hour is not None and current_hour != last_hour:
+        shift_hour()
+
+    # Cập nhật giờ cuối cùng
+    last_hour = current_hour
 
     # Thêm dữ liệu cảm biến vào giờ hiện tại
     add_sensor_rainfall(rainfall=rainfall)
-
-    # Kiểm tra nếu đủ 360 mẫu thì chuyển sang giờ mới
-    if len(current_hour_rainfall) == SAMPLES_PER_HOUR:
-        shift_hour()
 
     # Tính các đặc trưng lượng mưa
     rain_24h_data = get_latest_hourly_rainfall(hours=24)  # Lấy danh sách lượng mưa trong 24 giờ gần nhất
@@ -86,8 +125,8 @@ def control_prepare_data_rainfall(rainfall):
     # Cập nhật giá trị rain_duration
     if rain_48h_avg > 0.025:
         rain_duration += 1  # Tăng lên 1 nếu trung bình lượng mưa > 0.025
-    elif rain_48h_avg < 0:
-        rain_duration = 0  # Đặt bằng 0 nếu trung bình lượng mưa < 0
+    elif rain_48h_avg < 0.025:
+        rain_duration = 0  # Đặt bằng 0 nếu trung bình lượng mưa < 0.025
 
     return {
         "rain_duration": rain_duration,

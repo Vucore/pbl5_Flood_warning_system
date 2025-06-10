@@ -57,7 +57,7 @@
                 </form>
 
                 <div class="auth-footer">
-                    <p>Chưa có tài khoản? <a href="static/html/register.html">Đăng ký ngay</a></p>
+                    <p>Chưa có tài khoản? <a href="/static/html/register.html">Đăng ký ngay</a></p>
                 </div>
 
                 <div id="message-container" class="message-container"></div>
@@ -99,24 +99,26 @@
 
 
     <!-- Modal xác thực admin -->
-    <div class="modal fade" id="adminPasswordModal" tabindex="-1" aria-labelledby="adminPasswordModalLabel" aria-hidden="true">
+    <div class="modal fade" id="adminPasswordModal" tabindex="-1" aria-labelledby="adminPasswordModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-            <h5 class="modal-title" id="adminPasswordModalLabel">Xác thực quản trị viên</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="adminPasswordModalLabel">Xác thực quản trị viên</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="password" id="admin-password-input" class="form-control"
+                        placeholder="Nhập mật khẩu..." />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="admin-password-submit">Xác nhận</button>
+                </div>
             </div>
-            <div class="modal-body">
-            <input type="password" id="admin-password-input" class="form-control" placeholder="Nhập mật khẩu..." />
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-            <button type="button" class="btn btn-primary" id="admin-password-submit">Xác nhận</button>
-            </div>
-        </div>
         </div>
     </div>
-  
+
 
     <script src="/static/js/config.js"></script>
     <script src="/static/js/auth.js"></script>

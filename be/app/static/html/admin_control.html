@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="../js/config.js"></script>
     <script src="../js/script_toggle.js"></script>
     <style>
@@ -279,26 +280,30 @@
             background-color: #c0392b;
         }
 
-         /* Set Password Section */
-         .set-password {
+        /* Set Password Section */
+        .set-password {
             display: flex;
             align-items: center;
             gap: 12px;
-            align-self: flex-end; /* Căn phải */
+            align-self: flex-end;
+            /* Căn phải */
             max-width: 50%;
         }
 
         .set-password label {
-            font-size: 16px; /* Tăng cỡ chữ */
+            font-size: 16px;
+            /* Tăng cỡ chữ */
             color: #34495e;
             font-weight: 500;
             white-space: nowrap;
         }
 
         .set-password input {
-            width: 180px; /* Tăng chiều rộng */
+            width: 180px;
+            /* Tăng chiều rộng */
             padding: 8px;
-            font-size: 16px; /* Tăng cỡ chữ */
+            font-size: 16px;
+            /* Tăng cỡ chữ */
             border: 1px solid #ecf0f1;
             border-radius: 6px;
             outline: none;
@@ -310,8 +315,10 @@
         }
 
         .set-password button {
-            padding: 8px 16px; /* Tăng padding */
-            font-size: 16px; /* Tăng cỡ chữ */
+            padding: 8px 16px;
+            /* Tăng padding */
+            font-size: 16px;
+            /* Tăng cỡ chữ */
             font-weight: 500;
             color: #ffffff;
             background: #2ecc71;
@@ -324,6 +331,7 @@
         .set-password button:hover {
             background: #27ae60;
         }
+
         /* Water Level Controls */
         .water-level-controls {
             display: flex;
@@ -370,6 +378,10 @@
             background: #27ae60;
         }
 
+        /* .table-container:last-of-type {
+            max-height: 300px;
+            overflow-y: auto;
+        } */
     </style>
 
 </head>
@@ -497,7 +509,25 @@
                     </tbody>
                 </table>
             </div>
-        </section>
+    </div>
+    </section>
+    <div class="sensor-title">Chat History</div>
+    <div class="table-container">
+        <table id="chat-history-table">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Question</th>
+                    <th>Answer</th>
+                    <th>RAG Used</th>
+                    <th>RAG Documents</th>
+                    <th>Response Type</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
     </div>
     <script src="../js/config.js"></script>
     <script src="../js/admin_control.js"></script>

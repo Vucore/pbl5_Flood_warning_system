@@ -1,6 +1,7 @@
 from typing import Optional
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
+from fastapi.responses import PlainTextResponse
 import logging
 from ..services import func_services, firebase_services
 
@@ -110,15 +111,28 @@ class PasswordRequest(BaseModel):
 
 @router.post("/admin/password")
 def set_password(request: PasswordRequest):
-    password = request.password
-    func_services.update_pass_admin(password)
-    return {"message": "Password saved successfully"}
+    try:
+        password = request.password
+        func_services.update_pass_admin(password)
+        return {"message": "Password saved successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 class WaterLevelRequest(BaseModel):
     threshold_cm: int
 
 @router.post("/sensor/water-level")
 def set_water_level(request: WaterLevelRequest):
-    threshold = request.threshold_cm
-    result = firebase_services.update_distance_sensor_in_firebase(threshold)
-    return {"message": "Threshold saved successfully"}
+    try:
+        threshold = request.threshold_cm
+        result = firebase_services.update_distance_sensor_in_firebase(threshold)
+        return {"message": "Threshold saved successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@router.get("/chat-history", response_class=PlainTextResponse)
+async def get_chat_history():
+    try:
+        return func_services.get_chat_history()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
