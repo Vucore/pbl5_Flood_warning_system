@@ -19,7 +19,7 @@ chroma_db/
 
 # JSON files (except *.example.json)
 !*.example.json
-
+*.csv
 # Firebase admin SDK key (in specific path)
 be/pbl5-microbit-firebase-adminsdk-*.json
 
