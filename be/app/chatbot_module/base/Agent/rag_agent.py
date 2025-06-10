@@ -4,6 +4,7 @@ from ..RAG.file_loader import DocumentLoader
 from ..RAG.setup_spilitter import TextSplitter
 from ..RAG.vectorstore import VectorDB
 from ..RAG.setup_retriever import Retriever
+from ..Utils.conversation_logger import ConversationLogger
 import asyncio
 
 class RAGAgent():
@@ -16,6 +17,7 @@ class RAGAgent():
         self.retriever_class = Retriever()
         self.retriever = None
         self.ensemble_retriever = None
+        self.conversation_logger = ConversationLogger()
         self.process_documents()
         self.build_ensemble_retriever()
 
@@ -76,8 +78,19 @@ class RAGAgent():
             '''Prompt'''
             prompt = self.custom_prompt.format(context=context, question=query)
 
+            response_text = ""
             async for token in stream_answer(self.llm, prompt):
+                response_text += token
                 yield token
+
+            # Log the conversation after response is complete
+            self.conversation_logger.log_conversation(
+                question=query,
+                answer=response_text,
+                rag_used=True,
+                rag_documents=docs,
+                response_type="simple"
+            )
 
         return StreamingResponse(generate_response(), media_type="text/plain; charset=utf-8")
 
@@ -89,9 +102,21 @@ class RAGAgent():
                         yield token
                         await asyncio.sleep(0.002)
         prompt = "Hãy trả lời bằng tiếng Việt cho câu hỏi {}".format(query)
+        
         async def generate_response():
+            response_text = ""
             async for token in stream_answer(self.llm, prompt):
+                response_text += token
                 yield token
+
+            # Log the conversation after response is complete
+            self.conversation_logger.log_conversation(
+                question=query,
+                answer=response_text,
+                rag_used=False,
+                response_type="chat"
+            )
+
         return StreamingResponse(generate_response(), media_type="text/plain; charset=utf-8")
     
 

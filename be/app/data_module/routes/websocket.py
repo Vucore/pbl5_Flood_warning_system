@@ -89,7 +89,11 @@ async def websocket_endpoint(websocket: WebSocket):
                 await asyncio.sleep(10)
 
         fetch_task = asyncio.create_task(fetch_and_broadcast_from_firebase())
-        await fetch_task
+        # await fetch_task
+        while True:
+            msg = await websocket.receive_text()
+            if msg == "ping":
+                continue
 
     except WebSocketDisconnect:
         await manager.disconnect(websocket)
@@ -97,6 +101,6 @@ async def websocket_endpoint(websocket: WebSocket):
         print(f"Error: {e}")
         await manager.disconnect(websocket)
     finally:
+        heartbeat_task.cancel()
         if fetch_task:
             fetch_task.cancel()
-        # heartbeat_task.cancel()

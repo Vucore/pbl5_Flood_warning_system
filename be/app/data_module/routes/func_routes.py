@@ -49,8 +49,6 @@ class SensorToggleRequest(BaseModel):
 @router.post("/sensor/toggle")
 async def toggle_sensor(request: SensorToggleRequest):
     try:
-        # Add your logic here to handle the sensor state
-        # For example, update a database or trigger some action
         print(f"Toggling sensor {request.sensorId} to {request.isTurned}")
         sensor_name = request.sensorId
         state = request.isTurned
@@ -81,10 +79,19 @@ async def save_user_state(status: UserStatus):
         isGuest = status.isGuest
         isOnline = status.isOnline
         lastLogin = status.lastLogin
-        result = firebase_services.update_user_status(email, isGuest, isOnline, lastLogin)
+        result = func_services.update_user_status_sqlite(email=email, isOnline=isOnline, lastLogin=lastLogin)
+        return result
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))     
+
+@router.get("/user/list")
+async def get_list_user():
+    try:
+        result = func_services.get_list_user()
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
 
 class AdminAuthRequest(BaseModel):
     password: str
@@ -97,3 +104,21 @@ async def admin_auth(request: AdminAuthRequest):
         return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+class PasswordRequest(BaseModel):
+    password: str
+
+@router.post("/admin/password")
+def set_password(request: PasswordRequest):
+    password = request.password
+    func_services.update_pass_admin(password)
+    return {"message": "Password saved successfully"}
+
+class WaterLevelRequest(BaseModel):
+    threshold_cm: int
+
+@router.post("/sensor/water-level")
+def set_water_level(request: WaterLevelRequest):
+    threshold = request.threshold_cm
+    result = firebase_services.update_distance_sensor_in_firebase(threshold)
+    return {"message": "Threshold saved successfully"}

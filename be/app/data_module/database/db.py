@@ -1,6 +1,7 @@
 import sqlite3
 import os
 from typing import Optional
+import datetime
 
 class UserService:
     def __init__(self, db_path: Optional[str] = None):
@@ -9,7 +10,7 @@ class UserService:
 
         if db_path:
             abs_path = os.path.abspath(db_path)
-            os.makedirs(os.path.dirname(abs_path), exist_ok=True)  # Tạo thư mục nếu chưa có
+            os.makedirs(os.path.dirname(abs_path), exist_ok=True)  
             self.conn = sqlite3.connect(db_path, check_same_thread=False)
             self.cursor = self.conn.cursor()
         self.__create_table_admin()
@@ -24,10 +25,24 @@ class UserService:
         """)
         self.conn.commit()
     def __create_admin_account(self, password: str):
+        self.cursor.execute("SELECT COUNT(*) FROM admin")
+        count = self.cursor.fetchone()[0]
+        
+        if count == 0:
+            # Nếu chưa có, thì chèn tài khoản admin
+            self.cursor.execute("""
+                INSERT INTO admin (password)
+                VALUES (?)
+            """, (password,))
+            self.conn.commit()
+        else:
+            print("Admin account already exists. Skipping creation.")
+
+    def update_admin_password(self, new_password):
         self.cursor.execute("""
-            INSERT INTO admin (password)
-            VALUES (?)
-        """, (password,))
+            UPDATE admin
+            SET password = ?
+        """, (new_password,))
         self.conn.commit()
 
     def get_admin_password(self):
@@ -44,7 +59,9 @@ class UserService:
                 username TEXT NOT NULL,
                 email TEXT NOT NULL,
                 phone TEXT NOT NULL,
-                address TEXT
+                address TEXT,
+                status TEXT,
+                lastLogin DATETIME
             )
         """)
         self.conn.commit()
@@ -94,6 +111,33 @@ class UserService:
                 "message": "Không thể kiểm tra email",
                 "error": str(e)
             }
+    def update_user_status_sqlite(self, email: str, isOnline: bool, lastLogin: int):
+        try:
+            # Kiểm tra xem user có tồn tại không
+            self.cursor.execute("SELECT COUNT(*) FROM users WHERE email = ?", (email,))
+            if self.cursor.fetchone()[0] == 0:
+                return {"success": False, "error": f"User with email {email} does not exist"}
+
+            status = "online" if isOnline else "offline"
+            last_login_dt = datetime.datetime.fromtimestamp(lastLogin / 1000).strftime("%Y-%m-%d %H:%M:%S")
+            # print(f"Updating user status - email={email}, status={status}, last_login_dt={last_login_dt}")
+
+            self.cursor.execute("""
+                UPDATE users
+                SET status = ?, 
+                    lastLogin = ?
+                WHERE email = ?
+            """, (status, last_login_dt, email))
+
+            if self.cursor.rowcount == 0:
+                return {"success": False, "error": "No rows were updated"}
+
+            self.conn.commit()
+
+            return {"success": True, "status": status}
+        except Exception as e:
+            print(f"Error updating user status: {str(e)}")
+            return {"success": False, "error": str(e)}
         
     def get_all_users(self):
         try:
@@ -109,7 +153,9 @@ class UserService:
                     "username": user[1],
                     "email": user[2],
                     "phone": user[3],
-                    "address": user[4]
+                    "address": user[4],
+                    "status": user[5],
+                    "lastLogin": user[6]
                 })
 
             return {

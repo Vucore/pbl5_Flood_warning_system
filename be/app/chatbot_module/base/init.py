@@ -6,6 +6,7 @@ from .response_generator import ResponseGenerator
 from .model_setup import load_model_Llama3
 from .Agent.rag_agent import RAGAgent
 from .Agent.email_agent import EmailAgent 
+from .Utils.conversation_logger import ConversationLogger
 
 import asyncio
 
@@ -17,6 +18,7 @@ class ChatbotBase:
         self.rag_agent = RAGAgent(self.llm, self.embedding)
         self.email_agent = EmailAgent()
         self.response_generator = ResponseGenerator(self.rag_agent, self.email_agent)
+        self.conversation_logger = ConversationLogger()
 
         self.flood_data = load_json_local_data("responses.json")
         if self.flood_data:
@@ -40,13 +42,34 @@ class ChatbotBase:
 
         if pred_tag == "sensor_data":
             answer = self.response_generator.generate_response_sensor_data()
+            # Log the conversation
+            self.conversation_logger.log_conversation(
+                question=user_input,
+                answer=answer,
+                rag_used=False,
+                response_type="sensor_data"
+            )
             return StreamingResponse(stream_answer(answer=answer), media_type="text/plain; charset=utf-8")
 
         elif pred_tag != "unknow" and pred_tag != "sensor_data":
             answer = self.response_generator.generate_response_from_local(pred_tag, self.flood_data)
+            # Log the conversation
+            self.conversation_logger.log_conversation(
+                question=user_input,
+                answer=answer,
+                rag_used=False,
+                response_type=pred_tag
+            )
             return StreamingResponse(stream_answer(answer=answer), media_type="text/plain; charset=utf-8")
         else:         
             answer = "Tôi không hiểu câu hỏi, vui lòng cung cấp thêm thông tin!"
+            # Log the conversation
+            self.conversation_logger.log_conversation(
+                question=user_input,
+                answer=answer,
+                rag_used=False,
+                response_type="unknown"
+            )
             return StreamingResponse(stream_answer(answer=answer), media_type="text/plain; charset=utf-8")
         
    

@@ -1,5 +1,6 @@
 from ..database.db import UserService
 import random
+
 user_service_db = UserService("storage/users.db")
 user_service_db.create_table_users()
 
@@ -17,3 +18,14 @@ def admin_auth(password: str):
         return {"success": True, "message": "Đăng nhập thành công"}
     else:
         return {"success": False, "message": "Mật khẩu không đúng"}
+
+def update_pass_admin(password: str):
+    user_service_db.update_admin_password(password)
+
+def update_user_status_sqlite(email: str, isOnline: bool, lastLogin: int):
+    result = user_service_db.update_user_status_sqlite(email, isOnline, lastLogin)
+    return result
+
+def get_list_user():
+    result = user_service_db.get_all_users()
+    return result 

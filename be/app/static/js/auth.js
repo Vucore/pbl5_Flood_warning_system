@@ -35,13 +35,28 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     sessionStorage.setItem('loggedIn', true);
                     sessionStorage.setItem('userEmail', email);
-                    await fetch(`${API_LOGIN_STATE}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(userData)
-                    });
+                    try {
+                        const response = await fetch(`${API_LOGIN_STATE}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(userData)
+                        });
+
+                        if (!response.ok) {
+                            const errorData = await response.json();
+                            throw new Error(errorData.message || 'Cập nhật trạng thái đăng nhập thất bại');
+                        }
+
+                        const result = await response.json();
+                        if (!result.success) {
+                            throw new Error(result.error || 'Cập nhật trạng thái đăng nhập thất bại');
+                        }
+                    } catch (error) {
+                        console.error('Lỗi cập nhật trạng thái đăng nhập:', error);
+                        showMessage('error', 'Không thể cập nhật trạng thái đăng nhập. Vui lòng thử lại sau.');
+                    }
                     document.getElementById('loginEmail').value = '';
                     loginForm.querySelectorAll('input, button').forEach(el => el.disabled = true);
                     showMessage('success', 'Đăng nhập thành công! Đang chuyển hướng...');
@@ -99,10 +114,20 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     // Xử lý đăng nhập bằng Admin
     if (adminLoginBtn) {
-        adminLoginBtn.addEventListener('click', async function () {
-            const password = prompt("Vui lòng nhập mật khẩu quản trị viên:");
+        // Khởi tạo Bootstrap modal
+        const modal = new bootstrap.Modal(document.getElementById('adminPasswordModal'));
     
-            if (password === null) return;
+        adminLoginBtn.addEventListener('click', function () {
+            modal.show();  // Mở modal khi bấm nút "Đăng nhập admin"
+        });
+    
+        document.getElementById('admin-password-submit').addEventListener('click', async function () {
+            const password = document.getElementById("admin-password-input").value;
+    
+            if (!password) {
+                alert("Vui lòng nhập mật khẩu.");
+                return;
+            }
     
             try {
                 const response = await fetch(`${API_ADMIN_AUTH}`, {
@@ -122,9 +147,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             } catch (error) {
                 alert("Lỗi khi xác thực: " + error.message);
+            } finally {
+                // Reset modal
+                document.getElementById("admin-password-input").value = "";
+                modal.hide();
             }
         });
     }
+    
+
 });
 
 
@@ -170,7 +201,7 @@ function showMessage(type, message) {
     // Thêm vào container
     messageContainer.appendChild(messageElement);
 
-    // Tự động xóa thông báo sau 5 giây (trừ khi là thông báo thành công dẫn đến chuyển trang)
+
     if (type !== 'success' || !message.includes('chuyển hướng')) {
         setTimeout(() => {
             messageElement.style.opacity = '0';

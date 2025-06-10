@@ -38,10 +38,10 @@
       "Mức cảnh báo lũ lụt bao gồm những cấp độ nào?"
     ],
     "responses": [
-      "Hệ thống cảnh báo lũ lụt của chúng tôi có bốn cấp độ: Bình thường, Theo dõi, Cảnh báo, và Nghiêm trọng.",
-      "Có bốn cấp độ cảnh báo lũ lụt: Bình thường, Theo dõi, Cảnh báo, và Nghiêm trọng. Mỗi cấp độ yêu cầu mức độ chuẩn bị và hành động khác nhau.",
-      "Cảnh báo lũ lụt của chúng tôi có bốn cấp độ: Bình thường (Xanh lá), Theo dõi (Vàng), Cảnh báo (Cam), và Nghiêm trọng (Đỏ).",
-      "Bốn cấp độ cảnh báo của chúng tôi là: Bình thường, Theo dõi, Cảnh báo, và Nghiêm trọng, với các hành động cần thực hiện tùy vào mức độ nguy cơ."
+      "Hệ thống cảnh báo lũ lụt của chúng tôi có ba cấp độ: Bình thường, Cảnh báo, và Nguy hiểm.",
+      "Có ba cấp độ cảnh báo lũ lụt: Bình thường, Cảnh báo, và Nguy hiểm. Mỗi cấp độ yêu cầu mức độ chuẩn bị và hành động khác nhau.",
+      "Cảnh báo lũ lụt của chúng tôi có ba cấp độ: Bình thường, Cảnh báo, và Nguy hiểm.",
+      "Ba cấp độ cảnh báo của chúng tôi là: Bình thường, Cảnh báo, và Nguy hiểm, với các hành động cần thực hiện tùy vào mức độ nguy cơ."
     ]
   },
   {

@@ -5,29 +5,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sensor Control Panel</title>
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@48,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="/static/css/style_base.css">
-    <link rel="stylesheet" href="/static/css/style_chart.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="../js/config.js"></script>
     <script src="../js/script_toggle.js"></script>
     <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
         .sensor-title {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .sensor-title .live {
-            color: red;
-            font-size: 16px;
-            margin-left: 10px;
-            animation: blink 1s infinite;
+            color: #e74c3c;
+            font-size: 18px;
+            margin-left: 12px;
+            animation: blink 1.2s infinite;
         }
 
-        /* Hiệu ứng chớp đỏ cho chữ "Live" */
         @keyframes blink {
 
             0%,
@@ -40,65 +60,78 @@
             }
         }
 
-        /* Lưới hiển thị các cảm biến */
+        .sensor-readings {
+            width: 50%;
+        }
+
         .grid-card-sensor {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(2, minmax(250px, 1fr));
+            grid-template-rows: repeat(3, auto);
             gap: 20px;
         }
 
-        /* Mỗi card cảm biến */
         .card {
-            background-color: #fff;
-            border-radius: 12px;
+            background: #ffffff;
+            border-radius: 16px;
             padding: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            position: relative;
-            transition: transform 0.2s ease;
+            justify-content: space-between;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
         }
 
         .card.disabled {
-            opacity: 0.6;
-            pointer-events: none;
+            opacity: 0.9;
         }
 
-        /* Tiêu đề của từng cảm biến */
         .card h3 {
             margin: 0;
-            font-size: 18px;
-        }
-
-        /* Giá trị cảm biến */
-        .value span {
             font-size: 20px;
-            font-weight: bold;
-            color: #333;
+            font-weight: 500;
+            color: #34495e;
         }
 
-        /* Icon cảm biến */
-        .card i {
-            font-size: 30px;
-            color: #888;
+        .value {
+            margin-top: 8px;
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
         }
 
-        /* Chữ mô tả sự thay đổi */
         .change-text {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 8px;
             display: block;
         }
 
-        /* Toggle công tắc bật/tắt */
+        .change-text.increase {
+            color: #27ae60;
+        }
+
+        .change-text.decrease {
+            color: #e74c3c;
+        }
+
+        .card i {
+            font-size: 36px;
+            color: #2c3e50;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover i {
+            transform: scale(1.1);
+        }
+
         .checkBox {
-            margin-top: 10px;
+            margin-top: 12px;
         }
 
         .sensor-toggle {
@@ -107,57 +140,265 @@
 
         .sensor-toggle+.button {
             display: inline-block;
-            width: 40px;
-            height: 22px;
-            background-color: #ccc;
+            width: 50px;
+            height: 26px;
+            background: #ecf0f1;
             border-radius: 50px;
             position: relative;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.4s ease;
         }
 
         .sensor-toggle+.button::before {
             content: '';
             position: absolute;
-            width: 18px;
-            height: 18px;
-            background: white;
+            width: 22px;
+            height: 22px;
+            background: #ffffff;
             border-radius: 50%;
             top: 2px;
             left: 2px;
-            transition: 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transition: transform 0.4s ease;
         }
 
-        /* Khi checkbox bật */
         .sensor-toggle:checked+.button {
-            background-color: #4caf50;
+            background: #2ecc71;
         }
 
         .sensor-toggle:checked+.button::before {
-            transform: translateX(18px);
+            transform: translateX(24px);
         }
+
+        /* Bảng thông tin bên phải */
+        .info-table {
+            width: 50%;
+        }
+
+        .info-table .sensor-title {
+            justify-content: flex-start;
+        }
+
+        .table-container {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+            font-size: 16px;
+            color: #34495e;
+        }
+
+        th {
+            background: #3498db;
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        tr:nth-child(even) {
+            background: #f5f7fa;
+        }
+
+        tr:hover {
+            background: #ecf0f1;
+        }
+
+        .status.active {
+            color: #27ae60;
+            font-weight: 500;
+        }
+
+        .status.inactive {
+            color: #e74c3c;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .sensor-readings,
+            .info-table {
+                width: 100%;
+            }
+
+            .grid-card-sensor {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(6, auto);
+            }
+
+            .card h3 {
+                font-size: 18px;
+            }
+
+            .value {
+                font-size: 20px;
+            }
+
+            .card i {
+                font-size: 30px;
+            }
+
+            .table-container {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 400px;
+            }
+        }
+
+        .exit-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: 9999;
+            transition: background-color 0.3s ease;
+        }
+
+        .exit-button:hover {
+            background-color: #c0392b;
+        }
+
+         /* Set Password Section */
+         .set-password {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            align-self: flex-end; /* Căn phải */
+            max-width: 50%;
+        }
+
+        .set-password label {
+            font-size: 16px; /* Tăng cỡ chữ */
+            color: #34495e;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .set-password input {
+            width: 180px; /* Tăng chiều rộng */
+            padding: 8px;
+            font-size: 16px; /* Tăng cỡ chữ */
+            border: 1px solid #ecf0f1;
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .set-password input:focus {
+            border-color: #2ecc71;
+        }
+
+        .set-password button {
+            padding: 8px 16px; /* Tăng padding */
+            font-size: 16px; /* Tăng cỡ chữ */
+            font-weight: 500;
+            color: #ffffff;
+            background: #2ecc71;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .set-password button:hover {
+            background: #27ae60;
+        }
+        /* Water Level Controls */
+        .water-level-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            flex-wrap: nowrap;
+        }
+
+        .water-level-controls label {
+            font-size: 13px;
+            color: #34495e;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .water-level-controls input {
+            width: 60px;
+            padding: 6px;
+            font-size: 13px;
+            border: 1px solid #ecf0f1;
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .water-level-controls input:focus {
+            border-color: #2ecc71;
+        }
+
+        .water-level-controls button {
+            padding: 6px 12px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #ffffff;
+            background: #2ecc71;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .water-level-controls button:hover {
+            background: #27ae60;
+        }
+
     </style>
 
 </head>
+<script>
+    function handleExit() {
+        window.location.href = "/static/html/login.html";
+    }
+</script>
 
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center mb-4">Sensor Control Panel</h1>
-        <div class="row" id="sensorContainer">
-
-        </div>
-        <section class="sensor-readings mt-5">
-            <div class="sensor-title">Current Sensor Readings <span class="live">Live</span></div>
+    <button class="exit-button" onclick="handleExit()">
+        <i class="fas fa-sign-out-alt"></i> Exit
+    </button>
+    <div class="set-password">
+        <label for="password_input">Set Password Admin:</label>
+        <input type="password" id="password_input" placeholder="Enter password">
+        <button onclick="applyPassword()">Apply</button>
+    </div>
+    <div class="container">
+        <section class="sensor-readings">
+            <div class="sensor-title">Current Sensor Status <span class="live">Live</span></div>
             <div class="grid-card-sensor">
                 <div class="card">
                     <div>
                         <h3>Temperature (BME280)</h3>
                         <div class="checkBox">
-                            <input type="checkbox" id="temp" class=" sensor-toggle">
+                            <input type="checkbox" id="temp" class="sensor-toggle" checked>
                             <label for="temp" class="button"></label>
                         </div>
-                        <small id="tempChange" class="change-text"></small>
-                        <!-- Dòng thông tin thay đổi nằm dưới -->
                     </div>
                     <i class="fas fa-thermometer-half"></i>
                 </div>
@@ -165,11 +406,9 @@
                     <div>
                         <h3>Air Pressure (BME280)</h3>
                         <div class="checkBox">
-                            <input type="checkbox" id="air_pres" class=" sensor-toggle">
+                            <input type="checkbox" id="air_pres" class="sensor-toggle" checked>
                             <label for="air_pres" class="button"></label>
                         </div>
-                        <small id="pressureChange" class="change-text"></small>
-                        <!-- Dòng thông tin thay đổi -->
                     </div>
                     <i class="fas fa-wind"></i>
                 </div>
@@ -177,22 +416,19 @@
                     <div>
                         <h3>Air Humidity (BME280)</h3>
                         <div class="checkBox">
-                            <input type="checkbox" id="air_humd" class=" sensor-toggle">
+                            <input type="checkbox" id="air_humd" class="sensor-toggle" checked>
                             <label for="air_humd" class="button"></label>
                         </div>
-                        <small id="humidityChange" class="change-text"></small>
                     </div>
                     <i class="fas fa-water"></i>
                 </div>
-                <div class="card alert">
+                <div class="card">
                     <div>
                         <h3>Rainfall (MKE-S12)</h3>
                         <div class="checkBox">
-                            <input type="checkbox" id="rain" class=" sensor-toggle">
+                            <input type="checkbox" id="rain" class="sensor-toggle" checked>
                             <label for="rain" class="button"></label>
                         </div>
-                        <!-- <p id="change" class="change risk">🚨 Abnormally high for the season</p> -->
-                        <small id="rainFallChange" class="change-text"></small>
                     </div>
                     <i class="fas fa-cloud-showers-heavy"></i>
                 </div>
@@ -200,10 +436,9 @@
                     <div>
                         <h3>Soil Humidity (HL-38)</h3>
                         <div class="checkBox">
-                            <input type="checkbox" id="soil_humd" class=" sensor-toggle">
+                            <input type="checkbox" id="soil_humd" class="sensor-toggle" checked>
                             <label for="soil_humd" class="button"></label>
                         </div>
-                        <small id="soilHumidityChange" class="change-text"></small>
                     </div>
                     <i class="fas fa-seedling"></i>
                 </div>
@@ -211,17 +446,61 @@
                     <div>
                         <h3>Water Level (MKE-SE01)</h3>
                         <div class="checkBox">
-                            <input type="checkbox" id="water_level" class=" sensor-toggle">
+                            <input type="checkbox" id="water_level" class="sensor-toggle" checked>
                             <label for="water_level" class="button"></label>
                         </div>
-                        <small id="waterLevelChange" class="change-text"></small>
+                        <div class="water-level-controls">
+                            <label for="water_level_input">Set Distance (cm):</label>
+                            <input type="number" id="water_level_input" min="0" max="100" step="1" placeholder="0-100">
+                            <button onclick="applyWaterLevel()">Apply</button>
+                        </div>
                     </div>
                     <i class="fas fa-water"></i>
                 </div>
             </div>
         </section>
+        <section class="info-table">
+            <div class="sensor-title">User Information</div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>Status</th>
+                            <th>Last Login</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- <tr>
+                            <td>John</td>
+                            <td>john.doe@example.com</td>
+                            <td>+84 123 456 789</td>
+                            <td class="status active">Active</td>
+                            <td>10-6-2025</td>
+                        </tr>
+                        <tr>
+                            <td>John</td>
+                            <td>john.doe@example.com</td>
+                            <td>+84 123 456 789</td>
+                            <td class="status active">Active</td>
+                            <td>10-6-2025</td>
+                        </tr>
+                        <tr>
+                            <td>John</td>
+                            <td>john.doe@example.com</td>
+                            <td>+84 123 456 789</td>
+                            <td class="status active">Active</td>
+                            <td>10-6-2025</td>
+                        </tr> -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </div>
-
+    <script src="../js/config.js"></script>
+    <script src="../js/admin_control.js"></script>
 </body>
 
 </html>

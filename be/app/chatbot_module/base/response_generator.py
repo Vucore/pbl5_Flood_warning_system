@@ -27,8 +27,8 @@ class ResponseGenerator:
                     f"• Độ ẩm không khí: {air_humidity:.2f}%\n"
                     f"• Áp suất không khí: {air_pressure:.2f}hPa\n"
                     f"• Nhiệt độ: {temperature:.2f}°C\n"
-                    f"• Mực nước: {water_level:.2f}m\n"
-                    f"• Mức độ nguy hiểm: {sensor_data['warning_level']}\n")
+                    f"• Mực nước: {water_level:.2f}m\n")
+                    # f"• Mức độ nguy hiểm: {sensor_data['warning_level']}\n")
                 
         except Exception as e:
             return f"Lỗi khi lấy dữ liệu cảm biến: {str(e)}. Vui lòng thử lại sau."
